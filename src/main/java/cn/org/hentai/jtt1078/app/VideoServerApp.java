@@ -1,5 +1,13 @@
 package cn.org.hentai.jtt1078.app;
 
+import java.net.InetAddress;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.Banner.Mode;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
 import cn.org.hentai.jtt1078.http.GeneralResponseWriter;
 import cn.org.hentai.jtt1078.http.NettyHttpServerHandler;
 import cn.org.hentai.jtt1078.publisher.PublishManager;
@@ -7,27 +15,32 @@ import cn.org.hentai.jtt1078.server.Jtt1078Handler;
 import cn.org.hentai.jtt1078.server.Jtt1078MessageDecoder;
 import cn.org.hentai.jtt1078.util.Configs;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
-
-import java.net.InetAddress;
 
 /**
  * Created by matrixy on 2019/4/9.
  */
+@SpringBootApplication
 public class VideoServerApp {
     private static Logger logger = LoggerFactory.getLogger(VideoServerApp.class);
 
     public static void main(String[] args) throws Exception {
+        SpringApplication app = new SpringApplication(VideoServerApp.class);
+        app.setBannerMode(Mode.LOG);
+        app.run(args);
         Configs.init("/app.properties");
         PublishManager.init();
 
