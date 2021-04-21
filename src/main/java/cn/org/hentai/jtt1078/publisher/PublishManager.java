@@ -1,37 +1,50 @@
 package cn.org.hentai.jtt1078.publisher;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import cn.org.hentai.jtt1078.entity.Media;
 import cn.org.hentai.jtt1078.subscriber.Subscriber;
 import io.netty.channel.ChannelHandlerContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by houcheng on 2019-12-11.
+ * 推流服务器
+ * 
+ * @author eason
+ * @date 2021/04/21
  */
-public final class PublishManager
-{
-    static Logger logger = LoggerFactory.getLogger(PublishManager.class);
+@Slf4j
+public final class PublishManager {
+
+    /**
+     * 频道列表
+     */
     ConcurrentHashMap<String, Channel> channels;
 
-    private PublishManager()
-    {
+    private PublishManager() {
         channels = new ConcurrentHashMap<String, Channel>();
     }
 
-    public Subscriber subscribe(String tag, Media.Type type, ChannelHandlerContext ctx)
-    {
+    /**
+     * 订阅
+     * 
+     * @param tag
+     * @param type
+     * @param ctx
+     * @return
+     */
+    public Subscriber subscribe(String tag, Media.Type type, ChannelHandlerContext ctx) {
         Channel chl = channels.get(tag);
-        if (chl == null)
-        {
+        if (chl == null) {
             chl = new Channel(tag);
             channels.put(tag, chl);
         }
         Subscriber subscriber = null;
-        if (type.equals(Media.Type.Video)) subscriber = chl.subscribe(ctx);
-        else throw new RuntimeException("unknown media type: " + type);
+        if (type.equals(Media.Type.Video)) {
+            subscriber = chl.subscribe(ctx);
+        } else {
+            throw new RuntimeException("unknown media type: " + type);
+        }
 
         subscriber.setName("subscriber-" + tag + "-" + subscriber.getId());
         subscriber.start();
@@ -39,47 +52,87 @@ public final class PublishManager
         return subscriber;
     }
 
-    public void publishAudio(String tag, int sequence, long timestamp, int payloadType, byte[] data)
-    {
+    /**
+     * 取消订阅
+     * 
+     * @param tag
+     * @param watcherId
+     */
+    public void unsubscribe(String tag, long watcherId) {
         Channel chl = channels.get(tag);
-        if (chl != null) chl.writeAudio(timestamp, payloadType, data);
+        if (chl != null) {
+            chl.unsubscribe(watcherId);
+        }
+        log.info("unsubscribe: {} - {}", tag, watcherId);
     }
 
-    public void publishVideo(String tag, int sequence, long timestamp, int payloadType, byte[] data)
-    {
+    /**
+     * 推送音频
+     * 
+     * @param tag
+     * @param sequence
+     * @param timestamp
+     * @param payloadType
+     * @param data
+     */
+    public void publishAudio(String tag, int sequence, long timestamp, int payloadType, byte[] data) {
         Channel chl = channels.get(tag);
-        if (chl != null) chl.writeVideo(sequence, timestamp, payloadType, data);
+        if (chl != null) {
+            chl.writeAudio(timestamp, payloadType, data);
+        }
     }
 
-    public Channel open(String tag)
-    {
+    /**
+     * 推送视频
+     * 
+     * @param tag
+     * @param sequence
+     * @param timestamp
+     * @param payloadType
+     * @param data
+     */
+    public void publishVideo(String tag, int sequence, long timestamp, int payloadType, byte[] data) {
         Channel chl = channels.get(tag);
-        if (chl == null)
-        {
+        if (chl != null) {
+            chl.writeVideo(sequence, timestamp, payloadType, data);
+        }
+    }
+
+    /**
+     * 开启频道
+     * 
+     * @param tag
+     * @return
+     */
+    public Channel open(String tag) {
+        Channel chl = channels.get(tag);
+        if (chl == null) {
             chl = new Channel(tag);
             channels.put(tag, chl);
         }
-        if (chl.isPublishing()) throw new RuntimeException("channel already publishing");
+        if (chl.isPublishing()) {
+            throw new RuntimeException("channel already publishing");
+        }
         return chl;
     }
 
-    public void close(String tag)
-    {
+    /**
+     * 关闭频道
+     * 
+     * @param tag
+     */
+    public void close(String tag) {
         Channel chl = channels.remove(tag);
-        if (chl != null) chl.close();
+        if (chl != null) {
+            chl.close();
+        }
     }
 
-    public void unsubscribe(String tag, long watcherId)
-    {
-        Channel chl = channels.get(tag);
-        if (chl != null) chl.unsubscribe(watcherId);
-        logger.info("unsubscribe: {} - {}", tag, watcherId);
-    }
-    static final PublishManager instance = new PublishManager();
-    public static void init() { }
+    static final PublishManager INSTANCE = new PublishManager();
 
-    public static PublishManager getInstance()
-    {
-        return instance;
+    public static void init() {}
+
+    public static PublishManager getInstance() {
+        return INSTANCE;
     }
 }
