@@ -1,20 +1,19 @@
 package cn.org.hentai.jtt1078.subscriber;
 
-import cn.org.hentai.jtt1078.flv.FlvEncoder;
-import cn.org.hentai.jtt1078.util.Packet;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
+import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicLong;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicLong;
+import cn.org.hentai.jtt1078.flv.FlvEncoder;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 
 /**
  * Created by matrixy on 2020/1/11.
  */
-public abstract class Subscriber extends Thread
-{
+public abstract class Subscriber extends Thread {
     static Logger logger = LoggerFactory.getLogger(Subscriber.class);
     static final AtomicLong SEQUENCE = new AtomicLong(0L);
 
@@ -24,8 +23,7 @@ public abstract class Subscriber extends Thread
     private ChannelHandlerContext context;
     protected LinkedList<byte[]> messages;
 
-    public Subscriber(String tag, ChannelHandlerContext ctx)
-    {
+    public Subscriber(String tag, ChannelHandlerContext ctx) {
         this.tag = tag;
         this.context = ctx;
         this.lock = new Object();
@@ -34,13 +32,11 @@ public abstract class Subscriber extends Thread
         this.id = SEQUENCE.getAndAdd(1L);
     }
 
-    public long getId()
-    {
+    public long getId() {
         return this.id;
     }
 
-    public String getTag()
-    {
+    public String getTag() {
         return this.tag;
     }
 
@@ -48,30 +44,25 @@ public abstract class Subscriber extends Thread
 
     public abstract void onAudioData(long timeoffset, byte[] data, FlvEncoder flvEncoder);
 
-    public void enqueue(byte[] data)
-    {
-        if (data == null) return;
-        synchronized (lock)
-        {
+    public void enqueue(byte[] data) {
+        if (data == null)
+            return;
+        synchronized (lock) {
             messages.addLast(data);
             lock.notify();
         }
     }
 
-    public void run()
-    {
-        loop : while (!this.isInterrupted())
-        {
-            try
-            {
+    public void run() {
+        loop:
+        while (!this.isInterrupted()) {
+            try {
                 byte[] data = take();
-                if (data != null) send(data).await();
-            }
-            catch(Exception ex)
-            {
-                //销毁线程时，如果有锁wait就不会销毁线程，抛出InterruptedException异常
-                if (ex instanceof InterruptedException)
-                {
+                if (data != null)
+                    send(data).await();
+            } catch (Exception ex) {
+                // 销毁线程时，如果有锁wait就不会销毁线程，抛出InterruptedException异常
+                if (ex instanceof InterruptedException) {
                     break loop;
                 }
                 logger.error("send failed", ex);
@@ -80,35 +71,28 @@ public abstract class Subscriber extends Thread
         logger.info("subscriber closed");
     }
 
-    protected byte[] take()
-    {
+    protected byte[] take() {
         byte[] data = null;
-        try
-        {
-            synchronized (lock)
-            {
-                while (messages.isEmpty())
-                {
+        try {
+            synchronized (lock) {
+                while (messages.isEmpty()) {
                     lock.wait(100);
-                    if (this.isInterrupted()) return null;
+                    if (this.isInterrupted())
+                        return null;
                 }
                 data = messages.removeFirst();
             }
             return data;
-        }
-        catch(Exception ex)
-        {
+        } catch (Exception ex) {
             return null;
         }
     }
 
-    public void close()
-    {
+    public void close() {
         this.interrupt();
     }
 
-    public ChannelFuture send(byte[] message)
-    {
+    public ChannelFuture send(byte[] message) {
         return context.writeAndFlush(message);
     }
 }

@@ -1,10 +1,8 @@
 package cn.org.hentai.jtt1078.flv;
 
-import cn.org.hentai.jtt1078.util.Packet;
-
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+
+import cn.org.hentai.jtt1078.util.Packet;
 
 /**
  * Created by matrixy on 2020/1/3.

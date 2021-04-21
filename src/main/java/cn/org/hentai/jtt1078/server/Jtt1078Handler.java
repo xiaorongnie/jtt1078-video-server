@@ -1,19 +1,15 @@
 package cn.org.hentai.jtt1078.server;
 
-import cn.org.hentai.jtt1078.entity.Media;
-import cn.org.hentai.jtt1078.entity.MediaEncoding;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import cn.org.hentai.jtt1078.publisher.Channel;
 import cn.org.hentai.jtt1078.publisher.PublishManager;
-import cn.org.hentai.jtt1078.entity.Audio;
 import cn.org.hentai.jtt1078.util.Packet;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
 
 /**
  * Created by matrixy on 2019/4/9.
