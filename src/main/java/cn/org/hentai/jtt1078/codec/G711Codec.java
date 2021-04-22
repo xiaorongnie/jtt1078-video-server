@@ -1,6 +1,5 @@
 package cn.org.hentai.jtt1078.codec;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
