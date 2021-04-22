@@ -2,11 +2,10 @@ package cn.org.hentai.jtt1078.app;
 
 import java.net.InetAddress;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.Banner.Mode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 import cn.org.hentai.jtt1078.http.GeneralResponseWriter;
 import cn.org.hentai.jtt1078.http.NettyHttpServerHandler;
@@ -27,15 +26,20 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpRequestDecoder;
 import io.netty.handler.codec.http.HttpResponseEncoder;
+import lombok.extern.slf4j.Slf4j;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
 /**
- * Created by matrixy on 2019/4/9.
+ * RTP流媒体服务器
+ * 
+ * @author eason
+ * @date 2021/04/22
  */
 @SpringBootApplication
+@Slf4j
+@ComponentScan("cn.org.hentai.jtt1078.*")
 public class VideoServerApp {
-    private static Logger logger = LoggerFactory.getLogger(VideoServerApp.class);
 
     public static void main(String[] args) throws Exception {
         SpringApplication app = new SpringApplication(VideoServerApp.class);
@@ -85,7 +89,7 @@ public class VideoServerApp {
 
             int port = Configs.getInt("server.port", 1078);
             Channel ch = serverBootstrap.bind(InetAddress.getByName("0.0.0.0"), port).sync().channel();
-            logger.info("Video Server started at: {}", port);
+            log.info("Video Server started at: {}", port);
             ch.closeFuture();
         }
 
@@ -120,10 +124,10 @@ public class VideoServerApp {
             try {
                 int port = Configs.getInt("server.http.port", 3333);
                 ChannelFuture f = bootstrap.bind(InetAddress.getByName("0.0.0.0"), port).sync();
-                logger.info("HTTP Server started at: {}", port);
+                log.info("HTTP Server started at: {}", port);
                 f.channel().closeFuture().sync();
             } catch (InterruptedException e) {
-                logger.error("http server error", e);
+                log.error("http server error", e);
             } finally {
                 workerGroup.shutdownGracefully();
                 bossGroup.shutdownGracefully();

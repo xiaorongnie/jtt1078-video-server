@@ -29,26 +29,29 @@ public final class PublishManager {
      * 订阅
      * 
      * @param tag
+     *            频道 如010000012345-1
      * @param type
+     *            视频或是音频
      * @param ctx
+     *            客户端上下文
+     * 
      * @return
      */
     public Subscriber subscribe(String tag, Media.Type type, ChannelHandlerContext ctx) {
-        Channel chl = channels.get(tag);
-        if (chl == null) {
-            chl = new Channel(tag);
-            channels.put(tag, chl);
+        Channel channel = channels.get(tag);
+        if (channel == null) {
+            channel = new Channel(tag);
+            channels.put(tag, channel);
+            log.info("{} => start publishing", channel);
         }
         Subscriber subscriber = null;
         if (type.equals(Media.Type.Video)) {
-            subscriber = chl.subscribe(ctx);
+            subscriber = channel.subscribe(ctx);
         } else {
             throw new RuntimeException("unknown media type: " + type);
         }
-
         subscriber.setName("subscriber-" + tag + "-" + subscriber.getId());
         subscriber.start();
-
         return subscriber;
     }
 
@@ -59,11 +62,11 @@ public final class PublishManager {
      * @param watcherId
      */
     public void unsubscribe(String tag, long watcherId) {
-        Channel chl = channels.get(tag);
-        if (chl != null) {
-            chl.unsubscribe(watcherId);
+        Channel channel = channels.get(tag);
+        if (channel != null) {
+            channel.unsubscribe(watcherId);
         }
-        log.info("unsubscribe: {} - {}", tag, watcherId);
+        log.info("{} -> unsubscribe {}", channel, watcherId);
     }
 
     /**
@@ -76,9 +79,9 @@ public final class PublishManager {
      * @param data
      */
     public void publishAudio(String tag, int sequence, long timestamp, int payloadType, byte[] data) {
-        Channel chl = channels.get(tag);
-        if (chl != null) {
-            chl.writeAudio(timestamp, payloadType, data);
+        Channel channel = channels.get(tag);
+        if (channel != null) {
+            channel.writeAudio(timestamp, payloadType, data);
         }
     }
 
@@ -92,39 +95,43 @@ public final class PublishManager {
      * @param data
      */
     public void publishVideo(String tag, int sequence, long timestamp, int payloadType, byte[] data) {
-        Channel chl = channels.get(tag);
-        if (chl != null) {
-            chl.writeVideo(sequence, timestamp, payloadType, data);
+        Channel channel = channels.get(tag);
+        if (channel != null) {
+            channel.writeVideo(sequence, timestamp, payloadType, data);
         }
     }
 
     /**
-     * 开启频道
+     * RTP开启频道
      * 
      * @param tag
      * @return
      */
-    public Channel open(String tag) {
-        Channel chl = channels.get(tag);
-        if (chl == null) {
-            chl = new Channel(tag);
-            channels.put(tag, chl);
+    public Channel open(String tag, ChannelHandlerContext ctx) {
+        Channel channel = channels.get(tag);
+        if (channel == null) {
+            channel = new Channel(tag, ctx);
+            channels.put(tag, channel);
+            log.info("{} -> start publishing", channel);
         }
-        if (chl.isPublishing()) {
+        if (channel.ctx == null) {
+            channel.ctx = ctx;
+        }
+        if (channel.isPublishing()) {
             throw new RuntimeException("channel already publishing");
         }
-        return chl;
+        return channel;
     }
 
     /**
-     * 关闭频道
+     * RTP关闭频道
      * 
      * @param tag
      */
     public void close(String tag) {
-        Channel chl = channels.remove(tag);
-        if (chl != null) {
-            chl.close();
+        Channel channel = channels.remove(tag);
+        if (channel != null) {
+            channel.close();
         }
     }
 
@@ -135,4 +142,5 @@ public final class PublishManager {
     public static PublishManager getInstance() {
         return INSTANCE;
     }
+
 }

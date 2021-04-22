@@ -1,5 +1,6 @@
 package cn.org.hentai.jtt1078.publisher;
 
+import java.time.Instant;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -29,11 +30,13 @@ public class Channel {
     RTMPPublisher rtmpPublisher;
 
     String tag;
+    ChannelHandlerContext ctx;
     boolean publishing;
     ByteHolder buffer;
     AudioCodec audioCodec;
     FlvEncoder flvEncoder;
     private long firstTimestamp = -1;
+    Long lastEpochSecond;
 
     static String RTMP_URL = "rtmp.url";
 
@@ -42,6 +45,7 @@ public class Channel {
         this.subscribers = new ConcurrentLinkedQueue<Subscriber>();
         this.flvEncoder = new FlvEncoder(true, true);
         this.buffer = new ByteHolder(2048 * 100);
+        this.lastEpochSecond = Instant.now().getEpochSecond();
 
         if (StringUtils.isEmpty(Configs.get(RTMP_URL)) == false) {
             rtmpPublisher = new RTMPPublisher(tag);
@@ -49,23 +53,27 @@ public class Channel {
         }
     }
 
+    public Channel(String tag, ChannelHandlerContext ctx) {
+        this(tag);
+        this.ctx = ctx;
+    }
+
     public boolean isPublishing() {
         return publishing;
     }
 
     public Subscriber subscribe(ChannelHandlerContext ctx) {
-        log.info("channel: {} -> {}, subscriber: {}", Long.toHexString(hashCode() & 0xffffffffL), tag,
-            ctx.channel().remoteAddress().toString());
-
         Subscriber subscriber = new VideoSubscriber(this.tag, ctx);
         this.subscribers.add(subscriber);
+        this.lastEpochSecond = Instant.now().getEpochSecond();
+        log.info("{} -> subscriber: {}, {}", toString(), ctx.channel().remoteAddress().toString(), subscriber.getId());
         return subscriber;
     }
 
     public void writeAudio(long timestamp, int pt, byte[] data) {
         if (audioCodec == null) {
             audioCodec = AudioCodec.getCodec(pt);
-            log.info("audio codec: {}", MediaEncoding.getEncoding(Media.Type.Audio, pt));
+            log.info("{} -> audio codec {}", toString(), MediaEncoding.getEncoding(Media.Type.Audio, pt));
         }
         broadcastAudio(timestamp, audioCodec.toPCM(data));
     }
@@ -109,6 +117,7 @@ public class Channel {
     }
 
     public void unsubscribe(long watcherId) {
+        this.lastEpochSecond = Instant.now().getEpochSecond();
         for (Iterator<Subscriber> itr = subscribers.iterator(); itr.hasNext();) {
             Subscriber subscriber = itr.next();
             if (subscriber.getId() == watcherId) {
@@ -117,6 +126,7 @@ public class Channel {
                 return;
             }
         }
+        log.info("{} -> unsubscribe: {}, {}", toString(), watcherId, watcherId);
     }
 
     public void close() {
@@ -146,5 +156,26 @@ public class Channel {
             }
         }
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return tag + " [" + toHexString() + "]";
+    }
+
+    /**
+     * 频道ID
+     */
+    public String toHexString() {
+        return Long.toHexString(this.hashCode() & 0xffffffffL);
+    }
+
+    /**
+     * 获取频道订阅人数
+     * 
+     * @return
+     */
+    public synchronized int size() {
+        return subscribers.size();
     }
 }
