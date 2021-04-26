@@ -53,7 +53,7 @@ public class WaveHeader {
     /**
      * 2 每样本的数据位数，表示每个声道中各个样本的数据位数。如果有多 个声道，对每个声道而言，样本大小都一样。
      */
-    public short bitsPerSample;
+    public short bitsPerSample = 16;
     /**
      * 4 char 数据标记符＂data＂
      */
