@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import cn.org.hentai.jtt1078.codec.AudioCodec;
 import cn.org.hentai.jtt1078.entity.Media;
 import cn.org.hentai.jtt1078.entity.MediaEncoding;
+import cn.org.hentai.jtt1078.entity.Rtp1078Msg;
 import cn.org.hentai.jtt1078.flv.FlvEncoder;
 import cn.org.hentai.jtt1078.subscriber.RTMPPublisher;
 import cn.org.hentai.jtt1078.subscriber.Subscriber;
@@ -30,10 +31,12 @@ public class Channel {
     RTMPPublisher rtmpPublisher;
 
     String tag;
+    String imei;
     ChannelHandlerContext ctx;
     boolean publishing;
     ByteHolder buffer;
     AudioCodec audioCodec;
+    int payloadType;
     FlvEncoder flvEncoder;
     private long firstTimestamp = -1;
     Long lastEpochSecond;
@@ -42,6 +45,7 @@ public class Channel {
 
     public Channel(String tag) {
         this.tag = tag;
+        this.imei = tag.substring(0, tag.indexOf("-"));
         this.subscribers = new ConcurrentLinkedQueue<Subscriber>();
         this.flvEncoder = new FlvEncoder(true, true);
         this.buffer = new ByteHolder(2048 * 100);
@@ -70,10 +74,11 @@ public class Channel {
         return subscriber;
     }
 
-    public void writeAudio(long timestamp, int pt, byte[] data) {
+    public void writeAudio(long timestamp, int payloadType, byte[] data) {
         if (audioCodec == null) {
-            audioCodec = AudioCodec.getCodec(pt);
-            log.info("{} -> audio codec {}", toString(), MediaEncoding.getEncoding(Media.Type.Audio, pt));
+            audioCodec = AudioCodec.getCodec(payloadType);
+            this.payloadType = payloadType;
+            log.info("{} -> audio codec {}", toString(), MediaEncoding.getEncoding(Media.Type.Audio, payloadType));
         }
         broadcastAudio(timestamp, audioCodec.toPCM(data));
     }
@@ -177,5 +182,19 @@ public class Channel {
      */
     public synchronized int size() {
         return subscribers.size();
+    }
+
+    /**
+     * 发送音频数据到终端
+     * 
+     * @param pcmData
+     *            PCM数据
+     */
+    public void writeAudio(byte[] pcmData) {
+        Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
+        rtp1078Msg.setSim(imei);
+        rtp1078Msg.setData(audioCodec.fromPCM(pcmData));
+        rtp1078Msg.setFlag2((byte)payloadType);
+        ctx.channel().writeAndFlush(rtp1078Msg);
     }
 }
