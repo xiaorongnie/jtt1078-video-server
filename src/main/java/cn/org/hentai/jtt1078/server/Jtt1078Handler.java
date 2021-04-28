@@ -75,14 +75,15 @@ public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
         }
     }
 
+    public final void setSession(Session session) {
+        context.channel().attr(SESSION_KEY).set(session);
+    }
+
+
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
         release();
-    }
-
-    public final void setSession(Session session) {
-        context.channel().attr(SESSION_KEY).set(session);
     }
 
     @Override

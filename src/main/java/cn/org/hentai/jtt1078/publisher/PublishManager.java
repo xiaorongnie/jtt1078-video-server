@@ -3,6 +3,7 @@ package cn.org.hentai.jtt1078.publisher;
 import java.util.concurrent.ConcurrentHashMap;
 
 import cn.org.hentai.jtt1078.entity.Media;
+import cn.org.hentai.jtt1078.entity.Rtp1078Msg;
 import cn.org.hentai.jtt1078.subscriber.Subscriber;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
@@ -141,6 +142,22 @@ public final class PublishManager {
 
     public static PublishManager getInstance() {
         return INSTANCE;
+    }
+
+    /**
+     * 发送音频数据到终端
+     * 
+     * @param pcmData
+     *            PCM数据
+     */
+    public void writeAudio(byte[] pcmData) {
+        for (Channel channel : channels.values()) {
+            Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
+            rtp1078Msg.setSim(channel.imei);
+            rtp1078Msg.setData(channel.audioCodec.fromPCM(pcmData));
+            rtp1078Msg.setFlag2((byte)channel.payloadType);
+            channel.ctx.channel().writeAndFlush(rtp1078Msg);
+        }
     }
 
 }

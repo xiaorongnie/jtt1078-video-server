@@ -16,6 +16,7 @@ import cn.org.hentai.jtt1078.http.NettyHttpServerHandler;
 import cn.org.hentai.jtt1078.publisher.PublishManager;
 import cn.org.hentai.jtt1078.server.Jtt1078Handler;
 import cn.org.hentai.jtt1078.server.Jtt1078MessageDecoder;
+import cn.org.hentai.jtt1078.server.Jtt808MessageEncoder;
 import cn.org.hentai.jtt1078.util.Configs;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -85,7 +86,7 @@ public class VideoServerApp {
                     protected void initChannel(final SocketChannel channel) throws Exception {
                         ChannelPipeline p = channel.pipeline();
                         p.addLast(new Jtt1078MessageDecoder());
-                        // p.addLast(new Jtt808MessageEncoder());
+                        p.addLast(new Jtt808MessageEncoder());
                         // p.addLast(new JTT808Handler());
                         p.addLast(new Jtt1078Handler());
                     }

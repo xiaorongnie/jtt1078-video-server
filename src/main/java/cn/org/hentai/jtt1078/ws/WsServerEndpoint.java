@@ -1,6 +1,7 @@
 package cn.org.hentai.jtt1078.ws;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -10,6 +11,7 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.stereotype.Component;
 
+import cn.org.hentai.jtt1078.publisher.PublishManager;
 import cn.org.hentai.jtt1078.util.ByteUtils;
 
 @ServerEndpoint("/talk")
@@ -43,7 +45,8 @@ public class WsServerEndpoint {
      * @param text
      */
     @OnMessage
-    public void onMsg(byte[] messages, Session session) throws IOException {
-        System.out.println("接收到消息" + ByteUtils.toString(messages));
+    public void onMsg(byte[] data, Session session) throws IOException {
+        System.out.println("接收到消息" + ByteUtils.toString(data));
+        PublishManager.getInstance().writeAudio(Arrays.copyOfRange(data, 44, data.length));
     }
 }

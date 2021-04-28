@@ -9,7 +9,6 @@ import org.apache.commons.lang.StringUtils;
 import cn.org.hentai.jtt1078.codec.AudioCodec;
 import cn.org.hentai.jtt1078.entity.Media;
 import cn.org.hentai.jtt1078.entity.MediaEncoding;
-import cn.org.hentai.jtt1078.entity.Rtp1078Msg;
 import cn.org.hentai.jtt1078.flv.FlvEncoder;
 import cn.org.hentai.jtt1078.subscriber.RTMPPublisher;
 import cn.org.hentai.jtt1078.subscriber.Subscriber;
@@ -184,17 +183,4 @@ public class Channel {
         return subscribers.size();
     }
 
-    /**
-     * 发送音频数据到终端
-     * 
-     * @param pcmData
-     *            PCM数据
-     */
-    public void writeAudio(byte[] pcmData) {
-        Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
-        rtp1078Msg.setSim(imei);
-        rtp1078Msg.setData(audioCodec.fromPCM(pcmData));
-        rtp1078Msg.setFlag2((byte)payloadType);
-        ctx.channel().writeAndFlush(rtp1078Msg);
-    }
 }
