@@ -10,6 +10,8 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.stereotype.Component;
 
+import cn.org.hentai.jtt1078.util.ByteUtils;
+
 @ServerEndpoint("/talk")
 @Component
 public class WsServerEndpoint {
@@ -41,8 +43,7 @@ public class WsServerEndpoint {
      * @param text
      */
     @OnMessage
-    public String onMsg(String text) throws IOException {
-        System.out.println("收到消息" + text);
-        return "servet 发送：" + text;
+    public void onMsg(byte[] messages, Session session) throws IOException {
+        System.out.println("接收到消息" + ByteUtils.toString(messages));
     }
 }

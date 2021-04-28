@@ -6,6 +6,7 @@ import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.server.standard.ServerEndpointExporter;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
 /**
  * 集成 websocket-原生注解 wss://localhost:8443/talk
@@ -32,6 +33,15 @@ public class WebSocketConfig {
         scheduling.setPoolSize(10);
         scheduling.initialize();
         return scheduling;
+    }
+
+    @Bean
+    public ServletServerContainerFactoryBean createWebSocketContainer() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+        // 接收消息大小设置为5M
+        container.setMaxTextMessageBufferSize(5 * 1024 * 1024);
+        container.setMaxBinaryMessageBufferSize(5 * 1024 * 1024);
+        return container;
     }
 
 }
