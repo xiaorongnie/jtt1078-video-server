@@ -9,7 +9,10 @@ import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Created by matrixy on 2019/4/9.
+ * 1078消息处理
+ * 
+ * @author eason
+ * @date 2021/04/30
  */
 @Slf4j
 public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
@@ -35,18 +38,20 @@ public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
         }
 
         Integer sequence = session.get("video-sequence");
-        if (sequence == null)
+        if (sequence == null) {
             sequence = 0;
+        }
         // 1. 做好序号
         // 2. 音频需要转码后提供订阅
         int lengthOffset = 28;
         int dataType = (packet.seek(15).nextByte() >> 4) & 0x0f;
         int pkType = packet.seek(15).nextByte() & 0x0f;
         // 透传数据类型：0100，没有后面的时间以及Last I Frame Interval和Last Frame Interval字段
-        if (dataType == 0x04)
+        if (dataType == 0x04) {
             lengthOffset = 28 - 8 - 2 - 2;
-        else if (dataType == 0x03)
+        } else if (dataType == 0x03) {
             lengthOffset = 28 - 4;
+        }
 
         int pt = packet.seek(5).nextByte() & 0x7f;
 
@@ -78,7 +83,6 @@ public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
     public final void setSession(Session session) {
         context.channel().attr(SESSION_KEY).set(session);
     }
-
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
