@@ -3,9 +3,12 @@ package cn.org.hentai.jtt1078.codec;
 import cn.org.hentai.jtt1078.entity.MediaEncoding;
 
 /**
- * Created by houcheng on 2019-12-11.
+ *  音频编解码抽象类
+ * @author eason
+ * @date 2021/05/13
  */
 public abstract class AudioCodec {
+
     public abstract byte[] toPCM(byte[] data);
 
     public abstract byte[] fromPCM(byte[] data);

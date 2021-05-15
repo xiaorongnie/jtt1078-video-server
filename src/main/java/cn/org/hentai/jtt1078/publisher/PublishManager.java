@@ -1,7 +1,13 @@
 package cn.org.hentai.jtt1078.publisher;
 
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.util.StringUtils;
+
+import cn.org.hentai.jtt1078.codec.AudioCodec;
+import cn.org.hentai.jtt1078.codec.G711Codec;
 import cn.org.hentai.jtt1078.entity.Media;
 import cn.org.hentai.jtt1078.entity.Rtp1078Msg;
 import cn.org.hentai.jtt1078.subscriber.Subscriber;
@@ -17,17 +23,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class PublishManager {
 
-    /**
-     * 频道列表
-     */
     ConcurrentHashMap<String, Channel> channels;
 
     private PublishManager() {
-        channels = new ConcurrentHashMap<String, Channel>();
+        channels = new ConcurrentHashMap<>();
     }
 
     /**
-     * 订阅
+     * HTTP客户端订阅
      * 
      * @param tag
      *            频道 如010000012345-1
@@ -57,7 +60,7 @@ public final class PublishManager {
     }
 
     /**
-     * 取消订阅
+     * HTTP取消订阅
      * 
      * @param tag
      * @param watcherId
@@ -71,7 +74,7 @@ public final class PublishManager {
     }
 
     /**
-     * 推送音频
+     * 推送音频流&HTTP订阅者
      * 
      * @param tag
      * @param sequence
@@ -87,7 +90,7 @@ public final class PublishManager {
     }
 
     /**
-     * 推送视频
+     * 推送视频流给HTTP订阅者
      * 
      * @param tag
      * @param sequence
@@ -149,14 +152,29 @@ public final class PublishManager {
      * 
      * @param pcmData
      *            PCM数据
+     * @throws InterruptedException
      */
-    public void writeAudio(byte[] pcmData) {
-        for (Channel channel : channels.values()) {
-            Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
-            rtp1078Msg.setSim(channel.imei);
-            rtp1078Msg.setData(channel.audioCodec.fromPCM(pcmData));
-            rtp1078Msg.setFlag2((byte)channel.payloadType);
-            channel.ctx.channel().writeAndFlush(rtp1078Msg);
+    public void publishAudio(byte[] pcmData, String imei) {
+        AudioCodec audioCodec = new G711Codec();
+        // 一包包含320个16bit采样点
+        int pcmBlock = 320 * 2;
+        int times = pcmData.length / pcmBlock;
+        for (int i = 0; i < times; i++) {
+            byte[] data = ArrayUtils.subarray(pcmData, 640 * i, 640 * (i + 1));
+            for (Channel channel : channels.values()) {
+                if (StringUtils.isEmpty(imei) || imei.equals(channel.imei)) {
+                    Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
+                    rtp1078Msg.setSim(channel.imei);
+                    rtp1078Msg.setData(audioCodec.fromPCM(data));
+                    rtp1078Msg.setFlag2((byte)channel.payloadType);
+                    channel.ctx.channel().writeAndFlush(rtp1078Msg);
+                }
+            }
+            try {
+                TimeUnit.MILLISECONDS.sleep(25);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 

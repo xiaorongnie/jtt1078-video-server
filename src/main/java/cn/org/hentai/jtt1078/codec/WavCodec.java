@@ -6,12 +6,22 @@ import org.apache.commons.lang.ArrayUtils;
 
 import cn.org.hentai.jtt1078.entity.WaveHeader;
 
+/**
+ * WAV音频编解码
+ * 
+ * @author eason
+ * @date 2021/05/13
+ */
 public class WavCodec extends AudioCodec {
 
-    // pcm采样率
+    /**
+     * pcm采样率
+     */
     private static final int PCM_SAMPLE = 8000;
 
-    // 音频通道数
+    /**
+     * 音频通道数
+     */
     private static final int CHANNEL = 1;
 
     @Override

@@ -1,6 +1,9 @@
 package cn.org.hentai.jtt1078.publisher;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -36,6 +39,21 @@ public class Scheduler {
                 }
             }
         }
+    }
+
+    @Scheduled(initialDelay = 15 * 1000, fixedDelay = 15 * 1000)
+    public void test() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * 1024 * 4);
+        int len = -1;
+        byte[] block = new byte[512];
+        FileInputStream fis =
+            new FileInputStream("E:\\eclipse-jee-neon-2-win32-x86_64\\workspace2020\\webvoice\\docs\\temp\\test.wav");
+        while ((len = fis.read(block)) > -1) {
+            baos.write(block, 0, len);
+        }
+        byte[] data = baos.toByteArray();
+        PublishManager.getInstance().publishAudio(Arrays.copyOfRange(data, 44, data.length), null);
+        fis.close();
     }
 
 }

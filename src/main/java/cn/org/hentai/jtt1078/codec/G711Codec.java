@@ -4,9 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 核心转换，PCM转G711 Created by onlygx
  */
+@Slf4j
 public class G711Codec extends AudioCodec {
     private final static int SIGN_BIT = 0x80;
     private final static int QUANT_MASK = 0xf;
@@ -96,6 +99,7 @@ public class G711Codec extends AudioCodec {
             short v = (short)(((pcmdata[i + 1] & 0xff) << 8) | (pcmdata[i] & 0xff));
             g711data[k] = linear2alaw(v);
         }
+        log.debug("PCM -> G711A  = " + g711data.length);
         return g711data;
     }
 
@@ -106,9 +110,11 @@ public class G711Codec extends AudioCodec {
         if (data[0] == 0x00 && data[1] == 0x01 && (data[2] & 0xff) == (data.length - 4) / 2 && data[3] == 0x00) {
             temp = new byte[data.length - 4];
             System.arraycopy(data, 4, temp, 0, temp.length);
-        } else
+            log.debug("G711A+Hi -> PCM = " + data.length);
+        } else {
             temp = data;
-
+            log.debug("G711A -> PCM = " + data.length);
+        }
         return _toPCM(temp);
     }
 
