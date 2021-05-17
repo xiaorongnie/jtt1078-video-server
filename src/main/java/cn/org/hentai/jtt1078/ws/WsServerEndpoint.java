@@ -1,7 +1,6 @@
 package cn.org.hentai.jtt1078.ws;
 
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -29,8 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class WsServerEndpoint {
 
-    ConcurrentHashMap<String, Session> sessionHashMap = new ConcurrentHashMap<>();
-
     /**
      * 连接成功
      *
@@ -40,8 +37,8 @@ public class WsServerEndpoint {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "imei") String imei) {
-        sessionHashMap.put(session.getId(), session);
         session.getUserProperties().put("imei", imei);
+        WsSessionGroup.put(session);
         log.info("WebSocket open -> {}, {}", session.getId(), imei);
     }
 
@@ -53,7 +50,7 @@ public class WsServerEndpoint {
     @OnClose
     public void onClose(Session session) {
         log.info("WebSocket close -> {} {}", session.getId(), session.getUserProperties().get("imei"));
-        sessionHashMap.remove(session.getId());
+        WsSessionGroup.remove(session);
     }
 
     /**

@@ -15,6 +15,7 @@ import cn.org.hentai.jtt1078.subscriber.Subscriber;
 import cn.org.hentai.jtt1078.subscriber.VideoSubscriber;
 import cn.org.hentai.jtt1078.util.ByteHolder;
 import cn.org.hentai.jtt1078.util.Configs;
+import cn.org.hentai.jtt1078.ws.WsSessionGroup;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -118,6 +119,7 @@ public class Channel {
         for (Subscriber subscriber : subscribers) {
             subscriber.onAudioData(timeoffset, flvTag, flvEncoder);
         }
+        WsSessionGroup.onAudioData(imei, flvTag);
     }
 
     public void unsubscribe(long watcherId) {
