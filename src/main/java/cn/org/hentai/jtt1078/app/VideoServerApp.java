@@ -3,6 +3,7 @@ package cn.org.hentai.jtt1078.app;
 import java.net.InetAddress;
 
 import org.apache.catalina.connector.Connector;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.Banner.Mode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -45,6 +46,12 @@ import sun.misc.SignalHandler;
 @Slf4j
 @ComponentScan("cn.org.hentai.jtt1078.*")
 public class VideoServerApp {
+
+    @Value("${http.port:8080}")
+    private Integer httpPort;
+
+    @Value("${server.port:8443}")
+    private Integer serverPort;
 
     public static void main(String[] args) throws Exception {
         SpringApplication app = new SpringApplication(VideoServerApp.class);
@@ -161,8 +168,8 @@ public class VideoServerApp {
         // 同时启用http（8080）、https（8443）两个端口
         connector.setScheme("http");
         connector.setSecure(false);
-        connector.setPort(8080);
-        connector.setRedirectPort(8443);
+        connector.setPort(httpPort);
+        connector.setRedirectPort(serverPort);
         return connector;
     }
 
