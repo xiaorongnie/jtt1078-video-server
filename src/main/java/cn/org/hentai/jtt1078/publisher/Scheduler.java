@@ -10,6 +10,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.sun.jmx.snmp.Timestamp;
+
+import cn.org.hentai.jtt1078.ws.WsSessionGroup;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @EnableScheduling
 @Slf4j
 public class Scheduler {
+    int counts = 0;
 
     /**
      * 15秒检查一次,无人订阅的频道,主动关闭
@@ -41,7 +45,7 @@ public class Scheduler {
         }
     }
 
-    @Scheduled(initialDelay = 15 * 1000, fixedDelay = 15 * 1000)
+    // @Scheduled(initialDelay = 15 * 1000, fixedDelay = 15 * 1000)
     public void test() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * 1024 * 4);
         int len = -1;
@@ -53,6 +57,28 @@ public class Scheduler {
         }
         byte[] data = baos.toByteArray();
         PublishManager.getInstance().publishAudio(Arrays.copyOfRange(data, 44, data.length), null);
+        fis.close();
+    }
+
+    // @Scheduled(initialDelay = 10 * 1000, fixedDelay = 10 * 1000)
+    public void test2() throws Exception {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * 1024 * 4);
+        int len = -1;
+        byte[] block = new byte[512];
+//        FileInputStream fis =
+//            new FileInputStream("E:\\eclipse-jee-neon-2-win32-x86_64\\workspace2020\\webvoice\\docs\\temp\\test.wav");
+        FileInputStream fis =
+            new FileInputStream("D:\\test.wav");
+        while ((len = fis.read(block)) > -1) {
+            baos.write(block, 0, len);
+        }
+        byte[] data = baos.toByteArray();
+        if (counts % 2 == 0) {
+            WsSessionGroup.onAudioData(data);
+        } else {
+            WsSessionGroup.onAudioData2(data);
+        }
+        counts++;
         fis.close();
     }
 

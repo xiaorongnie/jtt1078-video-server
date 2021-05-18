@@ -11,7 +11,7 @@ import java.io.IOException;
  */
 public class WaveHeader {
     /***
-     * 资源交换文件标志（RIFF）
+     * 4 资源交换文件标志（RIFF）
      */
     public final char fileID[] = {'R', 'I', 'F', 'F'};
     /**
@@ -33,7 +33,7 @@ public class WaveHeader {
     /**
      * 2 int 格式类别（10H为PCM形式的声音数据)
      */
-    public short formatTag = 16;
+    public short formatTag = 1;
     /**
      * 2 int 通道数，单声道为1，双声道为2
      */
