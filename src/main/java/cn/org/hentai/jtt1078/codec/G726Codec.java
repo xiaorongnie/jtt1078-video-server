@@ -20,9 +20,6 @@ public class G726Codec extends AudioCodec {
     // 音频通道数
     private static final int CHANNEL = 1;
 
-    // 海思头
-    private boolean hiG726 = false;
-
     // 码率
     private static final int G726_BIT_RATE_16000 = 16000;
     private static final int G726_BIT_RATE_24000 = 24000;
@@ -35,7 +32,6 @@ public class G726Codec extends AudioCodec {
         // 如果前四字节是00 01 52 00，则是海思头，需要去掉
         if (data[0] == 0x00 && data[1] == 0x01 && (data[2] & 0xff) == (data.length - 4) / 2 && data[3] == 0x00) {
             pos = 4;
-            this.hiG726 = true;
         }
 
         int length = data.length - pos;
@@ -107,11 +103,4 @@ public class G726Codec extends AudioCodec {
             "/Users/tmyam/Downloads/out_16.pcm", 80);
     }
 
-    public boolean isHiG726() {
-        return hiG726;
-    }
-
-    public void setHiG726(boolean hiG726) {
-        this.hiG726 = hiG726;
-    }
 }
