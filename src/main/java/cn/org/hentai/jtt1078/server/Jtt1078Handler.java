@@ -92,8 +92,7 @@ public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        // super.exceptionCaught(ctx, cause);
-        cause.printStackTrace();
+        log.error("exception", cause);
         release();
         ctx.close();
     }

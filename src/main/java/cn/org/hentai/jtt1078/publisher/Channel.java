@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 import cn.org.hentai.jtt1078.codec.AudioCodec;
 import cn.org.hentai.jtt1078.entity.Media;
 import cn.org.hentai.jtt1078.entity.MediaEncoding;
+import cn.org.hentai.jtt1078.entity.MediaEncoding.Encoding;
 import cn.org.hentai.jtt1078.flv.FlvEncoder;
 import cn.org.hentai.jtt1078.subscriber.RTMPPublisher;
 import cn.org.hentai.jtt1078.subscriber.Subscriber;
@@ -80,7 +81,9 @@ public class Channel {
         if (audioCodec == null) {
             audioCodec = AudioCodec.getCodec(payloadType);
             this.payloadType = payloadType;
-            log.info("{} -> audio codec {}", toString(), MediaEncoding.getEncoding(Media.Type.Audio, payloadType));
+            Encoding encoding = MediaEncoding.getEncoding(Media.Type.Audio, payloadType);
+            log.info("{} -> audio codec={}", toString(), encoding);
+            log.info("{} -> audio data={}, pcm={}", toString(), data.length, audioCodec.toPCM(data).length);
         }
         broadcastAudio(timestamp, audioCodec.toPCM(data));
     }
