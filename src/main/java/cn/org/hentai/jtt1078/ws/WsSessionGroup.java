@@ -102,7 +102,7 @@ public class WsSessionGroup {
     public static void onAudioData2(byte[] wavData) {
         byte[] pcmData = Arrays.copyOfRange(wavData, 44, wavData.length);
         // 一包包含320个16bit采样点
-        int block = 320 * 10;
+        int block = 320 * 25;
         int pcmBlock = block * 2;
         int times = pcmData.length / pcmBlock;
         for (int i = 0; i < times; i++) {

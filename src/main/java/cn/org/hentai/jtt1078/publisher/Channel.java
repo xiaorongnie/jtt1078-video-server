@@ -32,6 +32,7 @@ public class Channel {
 
     String tag;
     String imei;
+    int chn;
     ChannelHandlerContext ctx;
     boolean publishing;
     ByteHolder buffer;
@@ -46,6 +47,7 @@ public class Channel {
     public Channel(String tag) {
         this.tag = tag;
         this.imei = tag.substring(0, tag.indexOf("-"));
+        this.chn = Integer.valueOf(tag.substring(tag.indexOf("-") + 1));
         this.subscribers = new ConcurrentLinkedQueue<Subscriber>();
         this.flvEncoder = new FlvEncoder(true, true);
         this.buffer = new ByteHolder(2048 * 100);
@@ -119,7 +121,10 @@ public class Channel {
         for (Subscriber subscriber : subscribers) {
             subscriber.onAudioData(timeoffset, flvTag, flvEncoder);
         }
-        WsSessionGroup.onAudioData(imei, flvTag);
+        // 对讲通道请求=0
+        if (this.chn == 0) {
+            WsSessionGroup.onAudioData(imei, flvTag);
+        }
     }
 
     public void unsubscribe(long watcherId) {

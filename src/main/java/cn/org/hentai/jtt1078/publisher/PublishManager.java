@@ -1,7 +1,6 @@
 package cn.org.hentai.jtt1078.publisher;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.util.StringUtils;
@@ -169,11 +168,6 @@ public final class PublishManager {
                     rtp1078Msg.setFlag2((byte)channel.payloadType);
                     channel.ctx.channel().writeAndFlush(rtp1078Msg);
                 }
-            }
-            try {
-                TimeUnit.MILLISECONDS.sleep(25);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }

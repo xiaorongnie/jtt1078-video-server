@@ -10,8 +10,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.sun.jmx.snmp.Timestamp;
-
 import cn.org.hentai.jtt1078.ws.WsSessionGroup;
 import lombok.extern.slf4j.Slf4j;
 
@@ -65,16 +63,16 @@ public class Scheduler {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * 1024 * 4);
         int len = -1;
         byte[] block = new byte[512];
-//        FileInputStream fis =
-//            new FileInputStream("E:\\eclipse-jee-neon-2-win32-x86_64\\workspace2020\\webvoice\\docs\\temp\\test.wav");
         FileInputStream fis =
-            new FileInputStream("D:\\test.wav");
+            new FileInputStream("E:\\eclipse-jee-neon-2-win32-x86_64\\workspace2020\\webvoice\\docs\\temp\\test.wav");
+        // FileInputStream fis =
+        // new FileInputStream("D:\\test.wav");
         while ((len = fis.read(block)) > -1) {
             baos.write(block, 0, len);
         }
         byte[] data = baos.toByteArray();
         if (counts % 2 == 0) {
-            WsSessionGroup.onAudioData(data);
+            WsSessionGroup.onAudioData2(data);
         } else {
             WsSessionGroup.onAudioData2(data);
         }
