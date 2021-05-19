@@ -82,7 +82,7 @@ public class Channel {
             audioCodec = AudioCodec.getCodec(payloadType);
             this.payloadType = payloadType;
             Encoding encoding = MediaEncoding.getEncoding(Media.Type.Audio, payloadType);
-            log.info("{} -> audio codec={}", toString(), encoding);
+            log.info("{} -> audio codec={};{}", toString(), encoding, payloadType);
             log.info("{} -> audio data={}, pcm={}", toString(), data.length, audioCodec.toPCM(data).length);
         }
         broadcastAudio(timestamp, audioCodec.toPCM(data));
