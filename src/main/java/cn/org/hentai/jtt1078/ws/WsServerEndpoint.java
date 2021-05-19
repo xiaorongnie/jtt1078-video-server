@@ -13,6 +13,8 @@ import javax.websocket.server.ServerEndpoint;
 import org.springframework.stereotype.Component;
 
 import cn.org.hentai.jtt1078.publisher.PublishManager;
+import cn.org.hentai.jtt1078.util.FileUtils;
+import cn.org.hentai.jtt1078.util.Utils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,7 +39,7 @@ public class WsServerEndpoint {
      */
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "imei") String imei) {
-        session.getUserProperties().put("imei", imei);
+        session.getUserProperties().put("imei", Utils.formatPhoneNumber(imei));
         WsSessionGroup.put(session);
         log.info("WebSocket open -> {}, {}", session.getId(), imei);
     }
@@ -61,6 +63,7 @@ public class WsServerEndpoint {
     @OnMessage
     public void onMsg(byte[] data, Session session) {
         String imei = String.valueOf(session.getUserProperties().get("imei"));
+        FileUtils.writeByteArrayToFile(data, "E:\\" + imei + ".wav");
         log.info("WebSocket msg -> {} {} {}", session.getId(), imei, data.length);
         PublishManager.getInstance().publishAudio(Arrays.copyOfRange(data, 44, data.length), imei);
     }
