@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.codec.ffmpeg;
+package cn.org.hentai.jtt1078.ffmpeg;
 
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
