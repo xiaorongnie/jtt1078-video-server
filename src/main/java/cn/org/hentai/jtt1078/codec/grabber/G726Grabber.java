@@ -24,6 +24,8 @@ public class G726Grabber extends AudioCodec {
     private static final int G726_BIT_RATE_32000 = 32000;
     private static final int G726_BIT_RATE_40000 = 40000;
 
+    AudioCodec g726AudioCodec = null;
+
     @Override
     public byte[] toPCM(byte[] data) {
         // 如果前四字节是00 01 52 00，则是海思头，需要去掉
@@ -32,20 +34,20 @@ public class G726Grabber extends AudioCodec {
             System.arraycopy(data, 4, newBuf, 0, data.length - 4);
             data = newBuf;
         }
-        // 计算G726的码率
-        int rateBit = data.length * 8 * PCM_SAMPLE * CHANNEL / PCM_POINT;
-        AudioCodec g726AudioCodec = null;
-        // 码率
-        if (rateBit == G726_BIT_RATE_40000) {
-            g726AudioCodec = new G726Kbps16Grabber();
-        } else if (rateBit == G726_BIT_RATE_32000) {
-            g726AudioCodec = new G726Kbps16Grabber();
-        } else if (rateBit == G726_BIT_RATE_24000) {
-            g726AudioCodec = new G726Kbps16Grabber();
-        } else if (rateBit == G726_BIT_RATE_16000) {
-            g726AudioCodec = new G726Kbps16Grabber();
-        } else {
-            return null;
+        if (g726AudioCodec == null) {
+            // 计算G726的码率
+            int rateBit = data.length * 8 * PCM_SAMPLE * CHANNEL / PCM_POINT;
+            if (rateBit == G726_BIT_RATE_40000) {
+                g726AudioCodec = new G726Grabber40kbps();
+            } else if (rateBit == G726_BIT_RATE_32000) {
+                g726AudioCodec = new G726Grabber32kbps();
+            } else if (rateBit == G726_BIT_RATE_24000) {
+                g726AudioCodec = new G726Grabber24kpbs();
+            } else if (rateBit == G726_BIT_RATE_16000) {
+                g726AudioCodec = new G726Grabber16kbps();
+            } else {
+                return null;
+            }
         }
         return g726AudioCodec.toPCM(data);
     }

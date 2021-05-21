@@ -9,7 +9,7 @@ import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.Frame;
 
 import cn.org.hentai.jtt1078.codec.WavCodec;
-import cn.org.hentai.jtt1078.codec.grabber.G726Kbps16Grabber;
+import cn.org.hentai.jtt1078.codec.grabber.G726Grabber16kbps;
 import cn.org.hentai.jtt1078.ffmpeg.AudioFileGrabber;
 import cn.org.hentai.jtt1078.ffmpeg.AudioStreamGrabber;
 import cn.org.hentai.jtt1078.util.ByteBufUtils;
@@ -20,7 +20,7 @@ public class Mg726Test {
         // grabberWavFile();
         // grabberWavBytes();
         // grabberG726_32Bytes();
-        G726Kbps16Grabber g726Kbps16Grabber = new G726Kbps16Grabber();
+        G726Grabber16kbps g726Kbps16Grabber = new G726Grabber16kbps();
         g726Kbps16Grabber.open();
         byte[] fileBytes = FileUtils.readFileToByteArray("d:\\g726_16kps.g726");
         g726Kbps16Grabber.toPCM(fileBytes);
