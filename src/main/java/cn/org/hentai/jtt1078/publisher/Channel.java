@@ -152,6 +152,9 @@ public class Channel {
         if (rtmpPublisher != null) {
             rtmpPublisher.close();
         }
+        if (audioCodec != null) {
+            audioCodec.close();
+        }
     }
 
     private byte[] readNalu() {

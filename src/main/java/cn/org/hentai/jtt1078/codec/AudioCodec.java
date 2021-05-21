@@ -24,9 +24,17 @@ public abstract class AudioCodec {
         } else if (MediaEncoding.Encoding.G726.ordinal() == encoding) {
             return new G726Codec();
         } else if (MediaEncoding.getCustomEncoding(encoding).equals(MediaEncoding.Encoding.MG726)) {
-            return new G726Codec();
+            return new Mg726Codec();
         }
         return new SilenceCodec();
+    }
+
+    public void open() {
+
+    }
+
+    public void close() {
+
     }
 
 }
