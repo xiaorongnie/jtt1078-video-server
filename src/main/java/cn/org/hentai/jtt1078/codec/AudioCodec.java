@@ -1,5 +1,6 @@
 package cn.org.hentai.jtt1078.codec;
 
+import cn.org.hentai.jtt1078.codec.grabber.AdpcmGrabber;
 import cn.org.hentai.jtt1078.codec.grabber.G726Grabber;
 import cn.org.hentai.jtt1078.entity.MediaEncoding;
 
@@ -17,7 +18,7 @@ public abstract class AudioCodec {
 
     public static AudioCodec getCodec(int encoding) {
         if (MediaEncoding.Encoding.ADPCMA.ordinal() == encoding) {
-            return new ADPCMCodec();
+            return new AdpcmGrabber();
         } else if (MediaEncoding.Encoding.G711A.ordinal() == encoding) {
             return new G711Codec();
         } else if (MediaEncoding.Encoding.G711U.ordinal() == encoding) {
