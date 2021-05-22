@@ -8,7 +8,11 @@ import cn.org.hentai.jtt1078.ffmpeg.AudioStreamGrabber;
 import cn.org.hentai.jtt1078.ffmpeg.AudioStreamGrabber.Exception;
 
 /**
- * Created by houcheng on 2019-12-05. ADPCM 和 PCM转换
+ * ADPCM 和 PCM转换
+ * </p>
+ * IMA-ADPCM测试到AV_CODEC_ID_ADPCM_IMA_ISS解码音质最好
+ * </p>
+ * DVI4-ADPCM测试到自己java解码效果最好
  */
 public final class AdpcmGrabber extends AudioCodec {
     private static AudioStreamGrabber audioStreamGrabber;
@@ -37,7 +41,7 @@ public final class AdpcmGrabber extends AudioCodec {
         // audioStreamGrabber.setAudioCodec(avcodec.AV_CODEC_ID_ADPCM_IMA_DAT4);
         // 杂音大,断断续续
         // audioStreamGrabber.setAudioCodec(avcodec.AV_CODEC_ID_ADPCM_IMA_SSI);
-        audioStreamGrabber.setAudioCodec(avcodec.AV_CODEC_ID_ADPCM_IMA_ISS);
+        audioStreamGrabber.setAudioCodec(avcodec.AV_CODEC_ID_ADPCM_VIMA);
         audioStreamGrabber.setBitsPerCodedSample(4);
         try {
             audioStreamGrabber.start();

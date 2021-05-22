@@ -18,7 +18,7 @@ public abstract class AudioCodec {
 
     public static AudioCodec getCodec(int encoding) {
         if (MediaEncoding.Encoding.ADPCMA.ordinal() == encoding) {
-            return new AdpcmGrabber();
+            return new ADPCMCodec();
         } else if (MediaEncoding.Encoding.G711A.ordinal() == encoding) {
             return new G711Codec();
         } else if (MediaEncoding.Encoding.G711U.ordinal() == encoding) {
