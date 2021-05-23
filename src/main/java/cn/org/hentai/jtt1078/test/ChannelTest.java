@@ -37,7 +37,7 @@ public class ChannelTest implements ByteChannel {
         src.get(temp, 0, len);
         buffer.write(temp, 0, len);
         // src.flip();
-        System.out.println("write: " + len);
+        // System.out.println("write: " + len);
         return len;
     }
 
