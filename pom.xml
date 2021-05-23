@@ -79,13 +79,24 @@
     <!-- https://mvnrepository.com/artifact/org.bytedeco/javacv-platform -->
     <dependency>
       <groupId>org.bytedeco</groupId>
-      <artifactId>javacv-platform</artifactId>
+      <artifactId>javacv</artifactId>
       <version>1.5.5</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.bytedeco/ffmpeg-platform 
-      <dependency> <groupId>org.bytedeco</groupId> <artifactId>ffmpeg</artifactId> 
-      <version>4.3.2-1.5.5</version> <classifier>windows-x86_64</classifier> </dependency> -->
+    <!-- https://mvnrepository.com/artifact/org.bytedeco/ffmpeg-platform -->
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>ffmpeg</artifactId>
+      <version>4.3.2-1.5.5</version>
+      <classifier>windows-x86_64</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>ffmpeg</artifactId>
+      <version>4.3.2-1.5.5</version>
+      <classifier>linux-x86_64</classifier>
+    </dependency>
 
   </dependencies>
 

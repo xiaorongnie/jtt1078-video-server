@@ -36,13 +36,13 @@ import lombok.extern.slf4j.Slf4j;
 import sun.misc.Signal;
 import sun.misc.SignalHandler;
 
-
 /**
  * RTP流媒体服务器
  * 
  * @author eason
  * @date 2021/04/22
  */
+@SuppressWarnings("restriction")
 @SpringBootApplication
 @Slf4j
 @ComponentScan("cn.org.hentai.jtt1078.*")
