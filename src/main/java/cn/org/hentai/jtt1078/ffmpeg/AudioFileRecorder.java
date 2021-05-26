@@ -1216,9 +1216,20 @@ public class AudioFileRecorder extends FrameRecorder {
         return recordSamples(0, 0, samples);
     }
 
+    /**
+     * 推流
+     * 
+     * @param sampleRate
+     *            采样率
+     * @param audioChannels
+     *            声道数
+     * @param samples
+     *            音频数据
+     * @return
+     * @throws Exception
+     */
     public synchronized boolean recordSamples(int sampleRate, int audioChannels, Buffer... samples) throws Exception {
         try (PointerScope scope = new PointerScope()) {
-
             if (audio_st == null) {
                 throw new Exception("No audio output stream (Is audioChannels > 0 and has start() been called?)");
             }
