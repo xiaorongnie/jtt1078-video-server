@@ -3,9 +3,12 @@ package cn.org.hentai.jtt1078.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.ArrayUtils;
+
 import cn.org.hentai.jtt1078.util.Utils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import lombok.Data;
 
 /**
  * RTP数据包结构
@@ -13,6 +16,7 @@ import io.netty.buffer.Unpooled;
  * @author lin
  * @date 2018年7月7日
  */
+@Data
 public class Rtp1078Msg {
     // 头标识
     private int head;
@@ -54,105 +58,13 @@ public class Rtp1078Msg {
     // 存放sps pps sei
     private byte[] extradata = null;
     // 海思头
-    private int hig726 = 0; // 海思编码
-
-    public int getHead() {
-        return head;
-    }
-
-    public void setHead(int head) {
-        this.head = head;
-    }
-
-    public byte getFlag1() {
-        return flag1;
-    }
-
-    public void setFlag1(byte flag1) {
-        this.flag1 = flag1;
-    }
-
-    public byte getFlag2() {
-        return flag2;
-    }
-
-    public void setFlag2(byte flag2) {
-        this.flag2 = flag2;
-    }
-
-    public short getPackId() {
-        return packId;
-    }
-
-    public void setPackId(short packId) {
-        this.packId = packId;
-    }
-
-    public String getSim() {
-        return sim;
-    }
-
-    public void setSim(String sim) {
-        this.sim = sim;
-    }
-
-    public byte getChn() {
-        return chn;
-    }
-
-    public void setChn(byte chn) {
-        this.chn = chn;
-    }
-
-    public byte getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(byte dataType) {
-        this.dataType = dataType;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public byte getEmptyAudio() {
-        return emptyAudio;
-    }
-
-    public void setEmptyAudio(byte emptyAudio) {
-        this.emptyAudio = emptyAudio;
-    }
-
-    public short getLastIInterval() {
-        return lastIInterval;
-    }
-
-    public void setLastIInterval(short lastIInterval) {
-        this.lastIInterval = lastIInterval;
-    }
-
-    public short getLastInterval() {
-        return lastInterval;
-    }
-
-    public void setLastInterval(short lastInterval) {
-        this.lastInterval = lastInterval;
-    }
-
-    public int getDataSize() {
-        return dataSize;
-    }
-
-    public void setDataSize(int dataSize) {
-        this.dataSize = dataSize;
-    }
+    private boolean hig726 = false;
 
     public byte[] getData() {
+        if (hig726) {
+            byte[] hiHead = new byte[] {0x00, 0x01, (byte)(data.length / 2), 0x00};
+            return ArrayUtils.addAll(hiHead, data);
+        }
         return data;
     }
 
@@ -163,46 +75,6 @@ public class Rtp1078Msg {
         if (data != null && this.getDT() == 0) {
             this.splitFrame();
         }
-    }
-
-    public byte[] getIdr() {
-        return idr;
-    }
-
-    public void setIdr(byte[] idr) {
-        this.idr = idr;
-    }
-
-    public byte[] getSps() {
-        return sps;
-    }
-
-    public void setSps(byte[] sps) {
-        this.sps = sps;
-    }
-
-    public byte[] getPps() {
-        return pps;
-    }
-
-    public void setPps(byte[] pps) {
-        this.pps = pps;
-    }
-
-    public byte[] getSei() {
-        return sei;
-    }
-
-    public void setSei(byte[] sei) {
-        this.sei = sei;
-    }
-
-    public byte[] getExtradata() {
-        return extradata;
-    }
-
-    public void setExtradata(byte[] extradata) {
-        this.extradata = extradata;
     }
 
     /**
@@ -398,11 +270,4 @@ public class Rtp1078Msg {
             this.packId, this.sim, this.chn, this.dataSize, this.getTimestamp());
     }
 
-    public int getHig726() {
-        return hig726;
-    }
-
-    public void setHig726(int hig726) {
-        this.hig726 = hig726;
-    }
 }

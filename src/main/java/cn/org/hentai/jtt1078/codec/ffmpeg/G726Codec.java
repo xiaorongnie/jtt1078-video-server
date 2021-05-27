@@ -34,6 +34,7 @@ public class G726Codec extends AudioCodec {
             byte[] newBuf = new byte[data.length - 4];
             System.arraycopy(data, 4, newBuf, 0, data.length - 4);
             data = newBuf;
+            hisi = true;
         }
         if (instance == null) {
             synchronized (G726Codec.class) {

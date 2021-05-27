@@ -11,6 +11,8 @@ import cn.org.hentai.jtt1078.entity.MediaEncoding;
  */
 public abstract class AudioCodec {
 
+    public boolean hisi = false;
+
     public abstract byte[] toPCM(byte[] data);
 
     public abstract byte[] fromPCM(byte[] data);
@@ -30,12 +32,8 @@ public abstract class AudioCodec {
         return new SilenceCodec();
     }
 
-    public void open() {
+    public void open() {}
 
-    }
-
-    public void close() {
-
-    }
+    public void close() {}
 
 }

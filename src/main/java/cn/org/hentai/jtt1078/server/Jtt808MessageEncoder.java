@@ -43,8 +43,9 @@ public class Jtt808MessageEncoder extends MessageToByteEncoder<Rtp1078Msg> {
         long time = System.currentTimeMillis() - session.getFirstTime();
         out.writeLong(time);
         // 长度+2
-        out.writeShort(msg.getData().length);
-        out.writeBytes(msg.getData());
+        byte[] data = msg.getData();
+        out.writeShort(data.length);
+        out.writeBytes(data);
     }
 
 }

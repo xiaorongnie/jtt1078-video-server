@@ -5,8 +5,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.util.StringUtils;
 
-import cn.org.hentai.jtt1078.codec.algorithm.AudioCodec;
-import cn.org.hentai.jtt1078.codec.algorithm.G711Codec;
 import cn.org.hentai.jtt1078.entity.Media;
 import cn.org.hentai.jtt1078.entity.Rtp1078Msg;
 import cn.org.hentai.jtt1078.subscriber.Subscriber;
@@ -154,7 +152,6 @@ public final class PublishManager {
      * @throws InterruptedException
      */
     public void publishAudio(byte[] pcmData, String imei) {
-        AudioCodec audioCodec = new G711Codec();
         // 一包包含320个16bit采样点
         int pcmBlock = 320 * 2;
         int times = pcmData.length / pcmBlock;
@@ -164,8 +161,9 @@ public final class PublishManager {
                 if (StringUtils.isEmpty(imei) || imei.equals(channel.imei)) {
                     Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
                     rtp1078Msg.setSim(channel.imei);
-                    rtp1078Msg.setData(audioCodec.fromPCM(data));
+                    rtp1078Msg.setData(channel.audioCodec.fromPCM(data));
                     rtp1078Msg.setFlag2((byte)channel.payloadType);
+                    rtp1078Msg.setHig726(channel.audioCodec.hisi);
                     channel.ctx.channel().writeAndFlush(rtp1078Msg);
                 }
             }
