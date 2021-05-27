@@ -37,7 +37,6 @@ import sun.misc.SignalHandler;
  * @author eason
  * @date 2021/04/22
  */
-@SuppressWarnings("restriction")
 @SpringBootApplication
 @Slf4j
 @ComponentScan("cn.org.hentai.jtt1078.*")

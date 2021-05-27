@@ -1,5 +1,11 @@
 package cn.org.hentai.jtt1078.test;
 
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.ShortBuffer;
+import java.util.Arrays;
+
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.Frame;
@@ -12,8 +18,8 @@ import cn.org.hentai.jtt1078.util.FileUtils;
 
 public class Mg726Test {
     public static void main(String[] args) throws Exception {
-        // grabberWavFile();
-        grabberWavBytes();
+        // grabberWavBytes();
+        grabberWavBytes2();
         grabberG726_32Bytes();
     }
 
@@ -57,6 +63,12 @@ public class Mg726Test {
                 audioStreamRecorder.setAudioBitrate(32000);
                 audioStreamRecorder.start();
                 byte[] data = audioStreamRecorder.recordSamples(frame.samples);
+                System.out.println(frame.samples[0]);
+                ShortBuffer shortBuffer = (ShortBuffer)frame.samples[0];
+                for (int i = 0; i < 50; i++) {
+                    System.out.println(i + " => " + shortBuffer.get(i));
+                }
+
                 FileUtils.writeByteArrayToFile(data, "d:\\铃声-g726-32bps.g726");
             }
         }
@@ -73,13 +85,35 @@ public class Mg726Test {
      * @return
      * @throws Exception
      */
+    public static void grabberWavBytes2() throws Exception {
+        byte[] data = FileUtils.readFileToByteArray("d:\\铃声.wav");
+        data = Arrays.copyOfRange(data, 44, data.length);
+
+        try (AudioStreamRecorder audioStreamRecorder = new AudioStreamRecorder()) {
+            audioStreamRecorder.setSampleRate(8000);
+            audioStreamRecorder.setAudioChannels(1);
+            audioStreamRecorder.setSampleFormat(avutil.AV_SAMPLE_FMT_S16);
+            audioStreamRecorder.setAudioCodec(avcodec.AV_CODEC_ID_ADPCM_G726);
+            audioStreamRecorder.setAudioBitrate(40000);
+            audioStreamRecorder.start();
+            byte[] fileBytes = audioStreamRecorder.recordShortSamples(data);
+            FileUtils.writeByteArrayToFile(fileBytes, "d:\\铃声-g726-32bps.g726");
+        }
+    }
+
+    /**
+     * 测试WAV流抓帧器
+     * 
+     * @return
+     * @throws Exception
+     */
     public static void grabberG726_32Bytes() throws Exception {
         AudioStreamGrabber ffmpegFrameGrabber = new AudioStreamGrabber();
         ffmpegFrameGrabber.setSampleRate(8000);
         ffmpegFrameGrabber.setAudioChannels(1);
         ffmpegFrameGrabber.setSampleFormat(avutil.AV_SAMPLE_FMT_S16);
         ffmpegFrameGrabber.setAudioCodec(avcodec.AV_CODEC_ID_ADPCM_G726);
-        ffmpegFrameGrabber.setBitsPerCodedSample(4);
+        ffmpegFrameGrabber.setBitsPerCodedSample(5);
         ffmpegFrameGrabber.start();
 
         byte[] fileBytes = FileUtils.readFileToByteArray("d:\\铃声-g726-32bps.g726");

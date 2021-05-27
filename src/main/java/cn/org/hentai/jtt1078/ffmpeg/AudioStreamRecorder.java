@@ -46,6 +46,7 @@ import static org.bytedeco.ffmpeg.presets.avutil.AVERROR_EAGAIN;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -375,6 +376,22 @@ public class AudioStreamRecorder extends FrameRecorder {
 
     }
 
+    /**
+     * 编码单声道16bit音频PCM数据
+     * 
+     * @param data
+     *            16bit,单声道PCM
+     * @return
+     * @throws Exception
+     */
+    public byte[] recordShortSamples(byte[] data) throws Exception {
+        short[] samples_short_buf = new short[data.length / 2];
+        ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples_short_buf);
+        ShortBuffer shortBuffer = ShortBuffer.wrap(samples_short_buf);
+        Buffer[] samples = new Buffer[] {shortBuffer};
+        return recordSamples(0, 0, samples);
+    }
+
     public byte[] recordSamples(Buffer... samples) throws Exception {
         return recordSamples(0, 0, samples);
     }
@@ -563,6 +580,11 @@ public class AudioStreamRecorder extends FrameRecorder {
                  * 
                  * 参数5：输入的单通道的样本数量。
                  */
+                // System.out.println(samples_convert_ctx);
+                // System.out.println(plane_ptr2);
+                // System.out.println(outputCount);
+                // System.out.println(plane_ptr);
+                // System.out.println(inputCount);
                 if ((ret = swr_convert(samples_convert_ctx, plane_ptr2, outputCount, plane_ptr, inputCount)) < 0) {
                     throw new Exception("swr_convert() error " + ret + ": Cannot convert audio samples.");
                 } else if (ret == 0) {
