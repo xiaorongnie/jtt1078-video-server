@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.codec;
+package cn.org.hentai.jtt1078.codec.algorithm;
 
 import de.sciss.jump3r.lowlevel.LameEncoder;
 import de.sciss.jump3r.mp3.Lame;

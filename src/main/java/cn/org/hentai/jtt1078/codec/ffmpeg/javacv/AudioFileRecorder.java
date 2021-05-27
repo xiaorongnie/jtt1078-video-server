@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.ffmpeg;
+package cn.org.hentai.jtt1078.codec.ffmpeg.javacv;
 
 import static org.bytedeco.ffmpeg.global.avcodec.AV_CODEC_CAP_EXPERIMENTAL;
 import static org.bytedeco.ffmpeg.global.avcodec.AV_CODEC_FLAG_GLOBAL_HEADER;
@@ -184,6 +184,7 @@ public class AudioFileRecorder extends FrameRecorder {
 
     private static Exception loadingException = null;
 
+    @SuppressWarnings("deprecation")
     public static void tryLoad() throws Exception {
         if (loadingException != null) {
             throw loadingException;
@@ -467,7 +468,7 @@ public class AudioFileRecorder extends FrameRecorder {
     private SwsContext img_convert_ctx;
     private SwrContext samples_convert_ctx;
     private int samples_channels, samples_format, samples_rate;
-    private PointerPointer plane_ptr, plane_ptr2;
+    private PointerPointer<?> plane_ptr, plane_ptr2;
     private AVPacket video_pkt, audio_pkt;
     private int[] got_video_packet, got_audio_packet;
     private AVFormatContext ifmt_ctx;
@@ -519,6 +520,7 @@ public class AudioFileRecorder extends FrameRecorder {
         }
     }
 
+    @SuppressWarnings({"resource", "rawtypes", "deprecation", "unchecked"})
     public synchronized void startUnsafe() throws Exception {
         try (PointerScope scope = new PointerScope()) {
 
@@ -1088,6 +1090,7 @@ public class AudioFileRecorder extends FrameRecorder {
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public synchronized boolean recordImage(int width, int height, int depth, int channels, int stride, int pixelFormat,
         Buffer... image) throws Exception {
         try (PointerScope scope = new PointerScope()) {
@@ -1228,6 +1231,7 @@ public class AudioFileRecorder extends FrameRecorder {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings("unchecked")
     public synchronized boolean recordSamples(int sampleRate, int audioChannels, Buffer... samples) throws Exception {
         try (PointerScope scope = new PointerScope()) {
             if (audio_st == null) {
@@ -1458,6 +1462,7 @@ public class AudioFileRecorder extends FrameRecorder {
         return got_audio_packet[0] != 0;
     }
 
+    @SuppressWarnings("resource")
     private void writePacket(int mediaType, AVPacket avPacket) throws Exception {
 
         AVStream avStream =
@@ -1483,6 +1488,7 @@ public class AudioFileRecorder extends FrameRecorder {
         av_packet_unref(avPacket);
     }
 
+    @SuppressWarnings("deprecation")
     public synchronized boolean recordPacket(AVPacket pkt) throws Exception {
         if (ifmt_ctx == null) {
             throw new Exception("No input format context (Has start(AVFormatContext) been called?)");

@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang.StringUtils;
 
-import cn.org.hentai.jtt1078.codec.AudioCodec;
+import cn.org.hentai.jtt1078.codec.algorithm.AudioCodec;
 import cn.org.hentai.jtt1078.entity.Media;
 import cn.org.hentai.jtt1078.entity.MediaEncoding;
 import cn.org.hentai.jtt1078.entity.MediaEncoding.Encoding;

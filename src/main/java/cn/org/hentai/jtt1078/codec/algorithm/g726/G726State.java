@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.codec.g726;
+package cn.org.hentai.jtt1078.codec.algorithm.g726;
 
 public class G726State {
 

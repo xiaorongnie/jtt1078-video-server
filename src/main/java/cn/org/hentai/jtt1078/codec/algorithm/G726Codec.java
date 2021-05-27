@@ -1,13 +1,13 @@
-package cn.org.hentai.jtt1078.codec;
+package cn.org.hentai.jtt1078.codec.algorithm;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import cn.org.hentai.jtt1078.codec.g726.G726;
-import cn.org.hentai.jtt1078.codec.g726.G726_16;
-import cn.org.hentai.jtt1078.codec.g726.G726_24;
-import cn.org.hentai.jtt1078.codec.g726.G726_32;
-import cn.org.hentai.jtt1078.codec.g726.G726_40;
+import cn.org.hentai.jtt1078.codec.algorithm.g726.G726;
+import cn.org.hentai.jtt1078.codec.algorithm.g726.G726_16;
+import cn.org.hentai.jtt1078.codec.algorithm.g726.G726_24;
+import cn.org.hentai.jtt1078.codec.algorithm.g726.G726_32;
+import cn.org.hentai.jtt1078.codec.algorithm.g726.G726_40;
 
 public class G726Codec extends AudioCodec {
 

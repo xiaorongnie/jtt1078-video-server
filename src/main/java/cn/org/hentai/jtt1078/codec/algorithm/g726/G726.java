@@ -1,8 +1,8 @@
 
-package cn.org.hentai.jtt1078.codec.g726;
+package cn.org.hentai.jtt1078.codec.algorithm.g726;
 
-import cn.org.hentai.jtt1078.codec.G711Codec;
-import cn.org.hentai.jtt1078.codec.G711UCodec;
+import cn.org.hentai.jtt1078.codec.algorithm.G711Codec;
+import cn.org.hentai.jtt1078.codec.algorithm.G711UCodec;
 
 /**
  * Common routines for G.721 and G.723 conversions.

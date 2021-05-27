@@ -1,11 +1,11 @@
-package cn.org.hentai.jtt1078.codec.grabber;
+package cn.org.hentai.jtt1078.codec.ffmpeg;
 
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
 
-import cn.org.hentai.jtt1078.codec.AudioCodec;
-import cn.org.hentai.jtt1078.ffmpeg.AudioStreamGrabber;
-import cn.org.hentai.jtt1078.ffmpeg.AudioStreamGrabber.Exception;
+import cn.org.hentai.jtt1078.codec.algorithm.AudioCodec;
+import cn.org.hentai.jtt1078.codec.ffmpeg.javacv.AudioStreamGrabber;
+import cn.org.hentai.jtt1078.codec.ffmpeg.javacv.AudioStreamGrabber.Exception;
 
 /**
  * ADPCM 和 PCM转换
@@ -14,7 +14,7 @@ import cn.org.hentai.jtt1078.ffmpeg.AudioStreamGrabber.Exception;
  * </p>
  * DVI4-ADPCM测试到自己java解码效果最好
  */
-public final class AdpcmGrabber extends AudioCodec {
+public final class AdpcmCodec extends AudioCodec {
     private static AudioStreamGrabber audioStreamGrabber;
     static {
         audioStreamGrabber = new AudioStreamGrabber();

@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.codec;
+package cn.org.hentai.jtt1078.codec.algorithm;
 
 /**
  * Created by houcheng on 2019-12-11.

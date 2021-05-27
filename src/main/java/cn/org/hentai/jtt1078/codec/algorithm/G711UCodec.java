@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.codec;
+package cn.org.hentai.jtt1078.codec.algorithm;
 
 import cn.org.hentai.jtt1078.util.ByteUtils;
 

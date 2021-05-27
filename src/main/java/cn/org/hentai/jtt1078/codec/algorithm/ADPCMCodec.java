@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.codec;
+package cn.org.hentai.jtt1078.codec.algorithm;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

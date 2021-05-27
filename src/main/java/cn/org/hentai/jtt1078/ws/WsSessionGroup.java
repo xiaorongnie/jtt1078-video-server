@@ -10,7 +10,7 @@ import javax.websocket.Session;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import cn.org.hentai.jtt1078.codec.WavCodec;
+import cn.org.hentai.jtt1078.codec.algorithm.WavCodec;
 import cn.org.hentai.jtt1078.util.ByteUtils;
 import lombok.extern.slf4j.Slf4j;
 

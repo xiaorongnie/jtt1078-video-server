@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.ffmpeg;
+package cn.org.hentai.jtt1078.codec.ffmpeg.javacv;
 
 import static org.bytedeco.ffmpeg.global.avcodec.AV_PKT_FLAG_KEY;
 import static org.bytedeco.ffmpeg.global.avcodec.av_jni_set_java_vm;
@@ -384,12 +384,17 @@ public class AudioStreamRecorder extends FrameRecorder {
      * @return
      * @throws Exception
      */
-    public byte[] recordShortSamples(byte[] data) throws Exception {
-        short[] samples_short_buf = new short[data.length / 2];
-        ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples_short_buf);
-        ShortBuffer shortBuffer = ShortBuffer.wrap(samples_short_buf);
-        Buffer[] samples = new Buffer[] {shortBuffer};
-        return recordSamples(0, 0, samples);
+    public synchronized byte[] recordShortSamples(byte[] data) {
+        try {
+            short[] samples_short_buf = new short[data.length / 2];
+            ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples_short_buf);
+            ShortBuffer shortBuffer = ShortBuffer.wrap(samples_short_buf);
+            Buffer[] samples = new Buffer[] {shortBuffer};
+            return recordSamples(0, 0, samples);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public byte[] recordSamples(Buffer... samples) throws Exception {

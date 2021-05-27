@@ -1,4 +1,4 @@
-package cn.org.hentai.jtt1078.ffmpeg;
+package cn.org.hentai.jtt1078.codec.ffmpeg.javacv;
 /*
  * Copyright (C) 2009-2021 Samuel Audet
  *
@@ -44,13 +44,22 @@ import static org.bytedeco.ffmpeg.global.avcodec.avcodec_find_decoder;
 import static org.bytedeco.ffmpeg.global.avcodec.avcodec_find_decoder_by_name;
 import static org.bytedeco.ffmpeg.global.avcodec.avcodec_free_context;
 import static org.bytedeco.ffmpeg.global.avcodec.avcodec_open2;
+import static org.bytedeco.ffmpeg.global.avcodec.avcodec_parameters_to_context;
 import static org.bytedeco.ffmpeg.global.avcodec.avcodec_receive_frame;
 import static org.bytedeco.ffmpeg.global.avcodec.avcodec_register_all;
 import static org.bytedeco.ffmpeg.global.avcodec.avcodec_send_packet;
 import static org.bytedeco.ffmpeg.global.avdevice.avdevice_register_all;
+import static org.bytedeco.ffmpeg.global.avformat.AVSEEK_SIZE;
+import static org.bytedeco.ffmpeg.global.avformat.av_dump_format;
+import static org.bytedeco.ffmpeg.global.avformat.av_find_input_format;
+import static org.bytedeco.ffmpeg.global.avformat.av_read_frame;
 import static org.bytedeco.ffmpeg.global.avformat.av_register_all;
+import static org.bytedeco.ffmpeg.global.avformat.avformat_find_stream_info;
 import static org.bytedeco.ffmpeg.global.avformat.avformat_network_init;
+import static org.bytedeco.ffmpeg.global.avformat.avformat_open_input;
 import static org.bytedeco.ffmpeg.global.avutil.AVERROR_EOF;
+import static org.bytedeco.ffmpeg.global.avutil.AVMEDIA_TYPE_AUDIO;
+import static org.bytedeco.ffmpeg.global.avutil.AV_LOG_INFO;
 import static org.bytedeco.ffmpeg.global.avutil.AV_PIX_FMT_NONE;
 import static org.bytedeco.ffmpeg.global.avutil.AV_SAMPLE_FMT_DBL;
 import static org.bytedeco.ffmpeg.global.avutil.AV_SAMPLE_FMT_DBLP;
@@ -70,6 +79,7 @@ import static org.bytedeco.ffmpeg.global.avutil.av_frame_free;
 import static org.bytedeco.ffmpeg.global.avutil.av_free;
 import static org.bytedeco.ffmpeg.global.avutil.av_get_bytes_per_sample;
 import static org.bytedeco.ffmpeg.global.avutil.av_get_default_channel_layout;
+import static org.bytedeco.ffmpeg.global.avutil.av_log_get_level;
 import static org.bytedeco.ffmpeg.global.avutil.av_malloc;
 import static org.bytedeco.ffmpeg.global.avutil.av_sample_fmt_is_planar;
 import static org.bytedeco.ffmpeg.global.avutil.av_samples_get_buffer_size;
@@ -80,27 +90,37 @@ import static org.bytedeco.ffmpeg.global.swresample.swr_get_out_samples;
 import static org.bytedeco.ffmpeg.global.swresample.swr_init;
 import static org.bytedeco.ffmpeg.presets.avutil.AVERROR_EAGAIN;
 
+import java.io.File;
+import java.io.InputStream;
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bytedeco.ffmpeg.avcodec.AVCodec;
 import org.bytedeco.ffmpeg.avcodec.AVCodecContext;
+import org.bytedeco.ffmpeg.avcodec.AVCodecParameters;
 import org.bytedeco.ffmpeg.avcodec.AVPacket;
+import org.bytedeco.ffmpeg.avformat.AVFormatContext;
+import org.bytedeco.ffmpeg.avformat.AVInputFormat;
+import org.bytedeco.ffmpeg.avformat.AVStream;
+import org.bytedeco.ffmpeg.avformat.Read_packet_Pointer_BytePointer_int;
+import org.bytedeco.ffmpeg.avformat.Seek_Pointer_long_int;
 import org.bytedeco.ffmpeg.avutil.AVDictionary;
 import org.bytedeco.ffmpeg.avutil.AVFrame;
+import org.bytedeco.ffmpeg.avutil.AVRational;
 import org.bytedeco.ffmpeg.swresample.SwrContext;
 import org.bytedeco.javacpp.BytePointer;
 import org.bytedeco.javacpp.IntPointer;
 import org.bytedeco.javacpp.Loader;
+import org.bytedeco.javacpp.Pointer;
 import org.bytedeco.javacpp.PointerPointer;
 import org.bytedeco.javacpp.PointerScope;
 import org.bytedeco.javacv.FFmpegLockCallback;
 import org.bytedeco.javacv.Frame;
 import org.bytedeco.javacv.FrameGrabber;
-
-import cn.org.hentai.jtt1078.util.ByteBufUtils;
 
 /**
  * 音频抓帧器
@@ -108,7 +128,7 @@ import cn.org.hentai.jtt1078.util.ByteBufUtils;
  * @author eason
  * @date 2021/05/21
  */
-public class AudioStreamGrabber extends FrameGrabber {
+public class AudioFileGrabber extends FrameGrabber {
 
     public static class Exception extends FrameGrabber.Exception {
 
@@ -121,6 +141,23 @@ public class AudioStreamGrabber extends FrameGrabber {
         public Exception(String message, Throwable cause) {
             super(message, cause);
         }
+    }
+
+    public static String[] getDeviceDescriptions() throws Exception {
+        tryLoad();
+        throw new UnsupportedOperationException("Device enumeration not support by FFmpeg.");
+    }
+
+    public static AudioFileGrabber createDefault(File deviceFile) throws Exception {
+        return new AudioFileGrabber(deviceFile);
+    }
+
+    public static AudioFileGrabber createDefault(String devicePath) throws Exception {
+        return new AudioFileGrabber(devicePath);
+    }
+
+    public static AudioFileGrabber createDefault(int deviceNumber) throws Exception {
+        throw new Exception(AudioFileGrabber.class + " does not support device numbers.");
     }
 
     private static Exception loadingException = null;
@@ -149,7 +186,7 @@ public class AudioStreamGrabber extends FrameGrabber {
                 if (t instanceof Exception) {
                     throw loadingException = (Exception)t;
                 } else {
-                    throw loadingException = new Exception("Failed to load " + AudioStreamGrabber.class, t);
+                    throw loadingException = new Exception("Failed to load " + AudioFileGrabber.class, t);
                 }
             }
         }
@@ -163,7 +200,12 @@ public class AudioStreamGrabber extends FrameGrabber {
         }
     }
 
-    public AudioStreamGrabber() {
+    public AudioFileGrabber(File file) {
+        this(file.getAbsolutePath());
+    }
+
+    public AudioFileGrabber(String filename) {
+        this.filename = filename;
         this.pixelFormat = AV_PIX_FMT_NONE;
         this.sampleFormat = AV_SAMPLE_FMT_NONE;
     }
@@ -216,6 +258,7 @@ public class AudioStreamGrabber extends FrameGrabber {
             samples_convert_ctx = null;
         }
 
+        got_frame = null;
         frame = null;
         timestamp = 0;
         frameNumber = 0;
@@ -227,13 +270,94 @@ public class AudioStreamGrabber extends FrameGrabber {
         release();
     }
 
-    /**
-     * 解码器
-     */
+    static Map<Pointer, InputStream> inputStreams = Collections.synchronizedMap(new HashMap<Pointer, InputStream>());
+
+    static class ReadCallback extends Read_packet_Pointer_BytePointer_int {
+        @Override
+        public int call(Pointer opaque, BytePointer buf, int buf_size) {
+            try {
+                byte[] b = new byte[buf_size];
+                InputStream is = inputStreams.get(opaque);
+                int size = is.read(b, 0, buf_size);
+                if (size < 0) {
+                    return 0;
+                } else {
+                    buf.put(b, 0, size);
+                    return size;
+                }
+            } catch (Throwable t) {
+                System.err.println("Error on InputStream.read(): " + t);
+                return -1;
+            }
+        }
+    }
+
+    static class SeekCallback extends Seek_Pointer_long_int {
+        @Override
+        public long call(Pointer opaque, long offset, int whence) {
+            try {
+                InputStream is = inputStreams.get(opaque);
+                long size = 0;
+                switch (whence) {
+                    case 0:
+                        is.reset();
+                        break; // SEEK_SET
+                    case 1:
+                        break; // SEEK_CUR
+                    case 2: // SEEK_END
+                        is.reset();
+                        while (true) {
+                            long n = is.skip(Long.MAX_VALUE);
+                            if (n == 0)
+                                break;
+                            size += n;
+                        }
+                        offset += size;
+                        is.reset();
+                        break;
+                    case AVSEEK_SIZE:
+                        long remaining = 0;
+                        while (true) {
+                            long n = is.skip(Long.MAX_VALUE);
+                            if (n == 0)
+                                break;
+                            remaining += n;
+                        }
+                        is.reset();
+                        while (true) {
+                            long n = is.skip(Long.MAX_VALUE);
+                            if (n == 0)
+                                break;
+                            size += n;
+                        }
+                        offset = size - remaining;
+                        is.reset();
+                        break;
+                    default:
+                        return -1;
+                }
+                long remaining = offset;
+                while (remaining > 0) {
+                    long skipped = is.skip(remaining);
+                    if (skipped == 0)
+                        break; // end of the stream
+                    remaining -= skipped;
+                }
+                return whence == AVSEEK_SIZE ? size : 0;
+            } catch (Throwable t) {
+                System.err.println("Error on InputStream.reset() or skip(): " + t);
+                return -1;
+            }
+        }
+    }
+
+    static ReadCallback readCallback = new ReadCallback().retainReference();
+    static SeekCallback seekCallback = new SeekCallback().retainReference();
+
+    private String filename;
+    private AVFormatContext oc;
+    private AVStream audio_st;
     private AVCodecContext audio_c;
-    /**
-     * 解码后数据结构体
-     */
     private AVFrame samples_frame;
     private BytePointer[] samples_ptr;
     private Buffer[] samples_buf;
@@ -242,19 +366,59 @@ public class AudioStreamGrabber extends FrameGrabber {
     @SuppressWarnings("rawtypes")
     private PointerPointer plane_ptr, plane_ptr2;
     private AVPacket pkt;
+    private int[] got_frame;
     private SwrContext samples_convert_ctx;
     private int samples_channels, samples_format, samples_rate;
     private Frame frame;
-    private int bitsPerCodedSample;
 
     private volatile boolean started = false;
 
-    public int getBitsPerCodedSample() {
-        return bitsPerCodedSample;
+    /**
+     * Is there an audio stream?
+     * 
+     * @return {@code audio_st!=null;}
+     */
+    public boolean hasAudio() {
+        return audio_st != null;
     }
 
-    public void setBitsPerCodedSample(int bitsPerCodedSample) {
-        this.bitsPerCodedSample = bitsPerCodedSample;
+    @Override
+    public int getAudioChannels() {
+        return audioChannels > 0 || audio_c == null ? super.getAudioChannels() : audio_c.channels();
+    }
+
+    @Override
+    public int getAudioCodec() {
+        return audio_c == null ? super.getAudioCodec() : audio_c.codec_id();
+    }
+
+    @Override
+    public int getAudioBitrate() {
+        return audio_c == null ? super.getAudioBitrate() : (int)audio_c.bit_rate();
+    }
+
+    @Override
+    public int getSampleFormat() {
+        if (sampleMode == SampleMode.SHORT || sampleMode == SampleMode.FLOAT) {
+            if (sampleFormat == AV_SAMPLE_FMT_NONE) {
+                return sampleMode == SampleMode.SHORT ? AV_SAMPLE_FMT_S16 : AV_SAMPLE_FMT_FLT;
+            } else {
+                return sampleFormat;
+            }
+        } else if (audio_c != null) { // RAW
+            return audio_c.sample_fmt();
+        } else {
+            return super.getSampleFormat();
+        }
+    }
+
+    @Override
+    public int getSampleRate() {
+        return sampleRate > 0 || audio_c == null ? super.getSampleRate() : audio_c.sample_rate();
+    }
+
+    public AVFormatContext getFormatContext() {
+        return oc;
     }
 
     /** Calls {@code start(true)}. */
@@ -274,86 +438,160 @@ public class AudioStreamGrabber extends FrameGrabber {
         startUnsafe(true);
     }
 
-    @Override
-    public void trigger() throws org.bytedeco.javacv.FrameGrabber.Exception {
-        //
-    }
-
     @SuppressWarnings({"rawtypes", "resource", "unchecked"})
     public synchronized void startUnsafe(boolean findStreamInfo) throws Exception {
         try (PointerScope scope = new PointerScope()) {
+
+            if (oc != null && !oc.isNull()) {
+                throw new Exception("start() has already been called: Call stop() before calling start() again.");
+            }
+
             int ret;
+            oc = new AVFormatContext(null);
             audio_c = null;
             plane_ptr = new PointerPointer(AVFrame.AV_NUM_DATA_POINTERS).retainReference();
             plane_ptr2 = new PointerPointer(AVFrame.AV_NUM_DATA_POINTERS).retainReference();
             pkt = new AVPacket().retainReference();
 
+            got_frame = new int[1];
             frame = new Frame();
             timestamp = 0;
             frameNumber = 0;
 
             pkt.stream_index(-1);
 
-            /** 查找解码器 */
-            AVCodec codec = avcodec_find_decoder_by_name(getAudioCodecName());
-            if (codec == null) {
-                codec = avcodec_find_decoder(getAudioCodec());
+            // Open video file
+            AVInputFormat f = null;
+            if (format != null && format.length() > 0) {
+                if ((f = av_find_input_format(format)) == null) {
+                    throw new Exception(
+                        "av_find_input_format() error: Could not find input format \"" + format + "\".");
+                }
             }
-            if (codec == null) {
-                throw new Exception("avcodec_find_decoder() error: Unsupported audio format or codec not found: "
-                    + getAudioCodec() + ".");
-            }
-
-            /** 配置解码器 */
-            if ((audio_c = avcodec_alloc_context3(codec)) == null) {
-                throw new Exception("avcodec_alloc_context3() error: Could not allocate audio decoding context.");
-            }
-            initCodec();
-            /** 打开解码器 */
             AVDictionary options = new AVDictionary(null);
-            for (Entry<String, String> e : audioOptions.entrySet()) {
+
+            if (sampleRate > 0) {
+                av_dict_set(options, "sample_rate", "" + sampleRate, 0);
+            }
+            if (audioChannels > 0) {
+                av_dict_set(options, "channels", "" + audioChannels, 0);
+            }
+            for (Entry<String, String> e : this.options.entrySet()) {
                 av_dict_set(options, e.getKey(), e.getValue(), 0);
             }
-            if ((ret = avcodec_open2(audio_c, codec, options)) < 0) {
-                throw new Exception("avcodec_open2() error " + ret + ": Could not open audio codec.");
+            if ((ret = avformat_open_input(oc, filename, f, options)) < 0) {
+                av_dict_set(options, "pixel_format", null, 0);
+                if ((ret = avformat_open_input(oc, filename, f, options)) < 0) {
+                    throw new Exception("avformat_open_input() error " + ret + ": Could not open input \"" + filename
+                        + "\". (Has setFormat() been called?)");
+                }
             }
             av_dict_free(options);
 
-            /** Allocate audio samples frame */
-            if ((samples_frame = av_frame_alloc()) == null) {
-                throw new Exception("av_frame_alloc() error: Could not allocate audio frame.");
+            oc.max_delay(maxDelay);
+
+            // Retrieve stream information, if desired
+            if (findStreamInfo && (ret = avformat_find_stream_info(oc, (PointerPointer)null)) < 0) {
+                throw new Exception(
+                    "avformat_find_stream_info() error " + ret + ": Could not find stream information.");
             }
 
-            samples_ptr = new BytePointer[] {null};
-            samples_buf = new Buffer[] {null};
+            if (av_log_get_level() >= AV_LOG_INFO) {
+                // Dump information about file onto standard error
+                av_dump_format(oc, 0, filename, 0);
+            }
 
+            // Find the first video and audio stream, unless the user specified otherwise
+            AVCodecParameters audio_par = null;
+            int nb_streams = oc.nb_streams();
+            for (int i = 0; i < nb_streams; i++) {
+                AVStream st = oc.streams(i);
+                // Get a pointer to the codec context for the video or audio stream
+                AVCodecParameters par = st.codecpar();
+                if (audio_st == null && par.codec_type() == AVMEDIA_TYPE_AUDIO
+                    && (audioStream < 0 || audioStream == i)) {
+                    audio_st = st;
+                    audio_par = par;
+                    audioStream = i;
+                }
+            }
+            if (audio_st == null) {
+                throw new Exception("Did not find a video or audio stream inside \"" + filename
+                    + "\" for videoStream == " + videoStream + " and audioStream == " + audioStream + ".");
+            }
+
+            if (audio_st != null) {
+                // Find the decoder for the audio stream
+                AVCodec codec = avcodec_find_decoder_by_name(audioCodecName);
+                if (codec == null) {
+                    System.out.println(audio_par.codec_id());
+                    System.out.println(getAudioCodec());
+                    codec = avcodec_find_decoder(audio_par.codec_id());
+                }
+                if (codec == null) {
+                    throw new Exception("avcodec_find_decoder() error: Unsupported audio format or codec not found: "
+                        + audio_par.codec_id() + ".");
+                }
+
+                /* Allocate a codec context for the decoder */
+                if ((audio_c = avcodec_alloc_context3(codec)) == null) {
+                    throw new Exception("avcodec_alloc_context3() error: Could not allocate audio decoding context.");
+                }
+
+                /* copy the stream parameters from the muxer */
+                if ((ret = avcodec_parameters_to_context(audio_c, audio_st.codecpar())) < 0) {
+                    releaseUnsafe();
+                    throw new Exception("avcodec_parameters_to_context() error " + ret
+                        + ": Could not copy the audio stream parameters.");
+                }
+
+                options = new AVDictionary(null);
+                for (Entry<String, String> e : audioOptions.entrySet()) {
+                    av_dict_set(options, e.getKey(), e.getValue(), 0);
+                }
+
+                // Enable multithreading when available
+                audio_c.thread_count(0);
+
+                // Open audio codec
+                if ((ret = avcodec_open2(audio_c, codec, options)) < 0) {
+                    throw new Exception("avcodec_open2() error " + ret + ": Could not open audio codec.");
+                }
+                av_dict_free(options);
+
+                // Allocate audio samples frame
+                if ((samples_frame = av_frame_alloc()) == null) {
+                    throw new Exception("av_frame_alloc() error: Could not allocate audio frame.");
+                }
+
+                samples_ptr = new BytePointer[] {null};
+                samples_buf = new Buffer[] {null};
+            }
             started = true;
-        }
-    }
 
-    /**
-     * 初始化解码器
-     */
-    private void initCodec() {
-        // Enable multithreading when available
-        audio_c.thread_count(0);
-        // 采样率
-        audio_c.sample_rate(getSampleRate());
-        // 表示编码压缩bit值与采样率的bit值之比 g726需要此参数
-        if (bitsPerCodedSample > 0) {
-            audio_c.bits_per_coded_sample(bitsPerCodedSample);
         }
-        // 通道数
-        audio_c.channels(getAudioChannels());
-        // 音频采样格式
-        audio_c.sample_fmt(getSampleFormat());
-        // 码率
-        audio_c.bit_rate(getAudioBitrate());
     }
 
     @Override
     public void stop() throws Exception {
         release();
+    }
+
+    @Override
+    public synchronized void trigger() throws Exception {
+        if (oc == null || oc.isNull()) {
+            throw new Exception("Could not trigger: No AVFormatContext. (Has start() been called?)");
+        }
+        if (pkt.stream_index() != -1) {
+            av_packet_unref(pkt);
+            pkt.stream_index(-1);
+        }
+        for (int i = 0; i < numBuffers + 1; i++) {
+            if (av_read_frame(oc, pkt) < 0) {
+                return;
+            }
+            av_packet_unref(pkt);
+        }
     }
 
     @SuppressWarnings({"unchecked", "resource"})
@@ -482,57 +720,99 @@ public class AudioStreamGrabber extends FrameGrabber {
     }
 
     public Frame grab() throws Exception {
-        return null;
+        return grabFrame();
     }
 
     @SuppressWarnings("unchecked")
-    public synchronized Frame grabAudio(byte[] data) throws Exception {
+    public synchronized Frame grabFrame() throws Exception {
         try (PointerScope scope = new PointerScope()) {
+            if (oc == null || oc.isNull()) {
+                throw new Exception("Could not grab: No AVFormatContext. (Has start() been called?)");
+            } else if (audio_st == null) {
+                return null;
+            }
             if (!started) {
                 throw new Exception("start() was not called successfully!");
             }
-            pkt.size(data.length);
-            pkt.data(new BytePointer(data));
-            int ret = avcodec_send_packet(audio_c, pkt);
-            if (ret < 0) {
-                throw new Exception(
-                    "avcodec_send_packet() error " + ret + ": Error sending an audio packet for decoding.");
+            // 初始化
+            frame.sampleRate = 0;
+            frame.audioChannels = 0;
+            frame.samples = null;
+            frame.data = null;
+            frame.opaque = null;
+            // 结束标识
+            boolean done = false;
+            // 读取文件标识
+            boolean readPacket = pkt.stream_index() == -1;
+            while (!done) {
+                int ret = 0;
+                if (readPacket) {
+                    // 读取字节流到待解码AVPacket pkt
+                    if (pkt.stream_index() != -1) {
+                        // Free the packet that was allocated by av_read_frame
+                        av_packet_unref(pkt);
+                    }
+                    if ((ret = av_read_frame(oc, pkt)) < 0) {
+                        pkt.stream_index(-1);
+                        return null;
+                    }
+                }
+
+                frame.streamIndex = pkt.stream_index();
+
+                if (audio_st != null && pkt.stream_index() == audio_st.index()) {
+                    // Decode audio frame
+                    if (readPacket) {
+                        ret = avcodec_send_packet(audio_c, pkt);
+                        if (ret < 0) {
+                            throw new Exception(
+                                "avcodec_send_packet() error " + ret + ": Error sending an audio packet for decoding.");
+                        }
+                    }
+
+                    // Did we get an audio frame?
+                    got_frame[0] = 0;
+                    while (ret >= 0 && !done) {
+                        ret = avcodec_receive_frame(audio_c, samples_frame);
+                        if (ret == AVERROR_EAGAIN() || ret == AVERROR_EOF()) {
+                            readPacket = true;
+                            break;
+                        } else if (ret < 0) {
+                            throw new Exception(
+                                "avcodec_receive_frame() error " + ret + ": Error during audio decoding.");
+                        }
+                        got_frame[0] = 1;
+
+                        long pts = samples_frame.best_effort_timestamp();
+                        AVRational time_base = audio_st.time_base();
+                        timestamp = 1000000L * pts * time_base.num() / time_base.den();
+                        frame.samples = samples_buf;
+                        /* if a frame has been decoded, output it */
+                        processSamples();
+                        done = true;
+                        frame.timestamp = timestamp;
+                        frame.keyFrame = samples_frame.key_frame() != 0;
+                    }
+                }
             }
-            ret = avcodec_receive_frame(audio_c, samples_frame);
-            if (ret == AVERROR_EAGAIN() || ret == AVERROR_EOF()) {
-                return null;
-            } else if (ret < 0) {
-                throw new Exception("avcodec_receive_frame() error " + ret + ": Error during audio decoding.");
-            }
-            frame.samples = samples_buf;
-            processSamples();
-            frame.timestamp = timestamp;
-            frame.keyFrame = samples_frame.key_frame() != 0;
             return frame;
         }
     }
 
-    /**
-     * 抓取PCM数据
-     * 
-     * @param data
-     * @return
-     * @throws Exception
-     */
-    public synchronized byte[] grabPcm(byte[] data) {
-        try {
-            Frame frame = grabAudio(data);
-            if (frame == null) {
-                return null;
-            }
-            Buffer buffer = frame.samples[0];
-            ByteBuffer byteBuffer = ByteBufUtils.shortToByteValue((ShortBuffer)buffer);
-            return byteBuffer.array();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public synchronized AVPacket grabPacket() throws Exception {
+        if (oc == null || oc.isNull()) {
+            throw new Exception("Could not grab: No AVFormatContext. (Has start() been called?)");
+        }
+        if (!started) {
+            throw new Exception("start() was not called successfully!");
+        }
+
+        // Return the next frame of a stream.
+        if (av_read_frame(oc, pkt) < 0) {
             return null;
         }
 
+        return pkt;
     }
 
 }

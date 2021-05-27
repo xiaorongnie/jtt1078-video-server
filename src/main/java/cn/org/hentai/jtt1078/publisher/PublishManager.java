@@ -5,8 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.util.StringUtils;
 
-import cn.org.hentai.jtt1078.codec.AudioCodec;
-import cn.org.hentai.jtt1078.codec.G711Codec;
+import cn.org.hentai.jtt1078.codec.algorithm.AudioCodec;
+import cn.org.hentai.jtt1078.codec.algorithm.G711Codec;
 import cn.org.hentai.jtt1078.entity.Media;
 import cn.org.hentai.jtt1078.entity.Rtp1078Msg;
 import cn.org.hentai.jtt1078.subscriber.Subscriber;

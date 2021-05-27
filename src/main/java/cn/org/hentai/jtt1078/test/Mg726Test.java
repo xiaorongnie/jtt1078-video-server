@@ -1,8 +1,5 @@
 package cn.org.hentai.jtt1078.test;
 
-import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.util.Arrays;
 
@@ -10,10 +7,10 @@ import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.Frame;
 
-import cn.org.hentai.jtt1078.codec.WavCodec;
-import cn.org.hentai.jtt1078.ffmpeg.AudioFileGrabber;
-import cn.org.hentai.jtt1078.ffmpeg.AudioStreamGrabber;
-import cn.org.hentai.jtt1078.ffmpeg.AudioStreamRecorder;
+import cn.org.hentai.jtt1078.codec.algorithm.WavCodec;
+import cn.org.hentai.jtt1078.codec.ffmpeg.javacv.AudioFileGrabber;
+import cn.org.hentai.jtt1078.codec.ffmpeg.javacv.AudioStreamGrabber;
+import cn.org.hentai.jtt1078.codec.ffmpeg.javacv.AudioStreamRecorder;
 import cn.org.hentai.jtt1078.util.FileUtils;
 
 public class Mg726Test {

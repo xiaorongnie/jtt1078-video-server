@@ -1,6 +1,6 @@
 package cn.org.hentai.jtt1078.subscriber;
 
-import cn.org.hentai.jtt1078.codec.MP3Encoder;
+import cn.org.hentai.jtt1078.codec.algorithm.MP3Encoder;
 import cn.org.hentai.jtt1078.flv.AudioTag;
 import cn.org.hentai.jtt1078.flv.FlvAudioTagEncoder;
 import cn.org.hentai.jtt1078.flv.FlvEncoder;

@@ -1,9 +1,9 @@
 package cn.org.hentai.jtt1078.test;
 
-import cn.org.hentai.jtt1078.codec.G711Codec;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+
+import cn.org.hentai.jtt1078.codec.algorithm.G711Codec;
 
 /**
  * Created by matrixy on 2019/12/21.

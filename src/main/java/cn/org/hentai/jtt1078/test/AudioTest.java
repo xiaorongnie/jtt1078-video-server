@@ -3,7 +3,7 @@ package cn.org.hentai.jtt1078.test;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import cn.org.hentai.jtt1078.codec.G711Codec;
+import cn.org.hentai.jtt1078.codec.algorithm.G711Codec;
 import cn.org.hentai.jtt1078.server.Jtt1078Decoder;
 import cn.org.hentai.jtt1078.util.Packet;
 
