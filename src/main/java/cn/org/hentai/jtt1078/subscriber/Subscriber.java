@@ -19,12 +19,16 @@ public abstract class Subscriber extends Thread {
 
     private long id;
     private String tag;
+    String imei;
+    int chn;
     private Object lock;
     private ChannelHandlerContext context;
     protected LinkedList<byte[]> messages;
 
     public Subscriber(String tag, ChannelHandlerContext ctx) {
         this.tag = tag;
+        this.imei = tag.substring(0, tag.indexOf("-"));
+        this.chn = Integer.valueOf(tag.substring(tag.indexOf("-") + 1));
         this.context = ctx;
         this.lock = new Object();
         this.messages = new LinkedList<byte[]>();

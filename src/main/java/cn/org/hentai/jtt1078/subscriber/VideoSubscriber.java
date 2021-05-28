@@ -61,9 +61,15 @@ public class VideoSubscriber extends Subscriber {
 
     @Override
     public void onAudioData(long timeoffset, byte[] data, FlvEncoder flvEncoder) {
-        if (!videoHeaderSent)
-            return;
-
+        // 之前是不是已经发送过了？没有的话，需要补发FLV HEADER的。。。
+        if (!videoHeaderSent) {
+            if (chn <= 0) {
+                enqueue(HttpChunk.make(flvEncoder.getHeader().getBytes()));
+                videoHeaderSent = true;
+            } else {
+                return;
+            }
+        }
         byte[] mp3Data = mp3Encoder.encode(data);
         if (mp3Data == null || mp3Data.length == 0)
             return;
