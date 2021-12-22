@@ -158,7 +158,7 @@ public final class PublishManager {
         for (int i = 0; i < times; i++) {
             byte[] data = ArrayUtils.subarray(pcmData, 640 * i, 640 * (i + 1));
             for (Channel channel : channels.values()) {
-                if (StringUtils.isEmpty(imei) || imei.equals(channel.imei)) {
+                if (StringUtils.hasText(imei) && channel.audioCodec != null && imei.equals(channel.imei)) {
                     Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
                     rtp1078Msg.setSim(channel.imei);
                     rtp1078Msg.setData(channel.audioCodec.fromPCM(data));

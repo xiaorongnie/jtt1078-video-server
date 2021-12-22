@@ -2,9 +2,9 @@ package cn.org.hentai.jtt1078.app;
 
 import java.net.InetAddress;
 
-import org.springframework.boot.Banner.Mode;
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.Banner.Mode;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -47,8 +47,8 @@ import sun.misc.SignalHandler;
 @ComponentScan("cn.org.hentai.jtt1078.*")
 public class VideoServerApp {
 
-    @Value("${http.port:8080}")
-    private Integer httpPort;
+    @Value("${server.port0:8080}")
+    private Integer serverPort0;
 
     @Value("${server.port:8443}")
     private Integer serverPort;
@@ -99,7 +99,7 @@ public class VideoServerApp {
                     }
                 });
 
-            int port = Configs.getInt("server.port", 1078);
+            int port = Configs.getInt("server.rtp.port", 10780);
             Channel ch = serverBootstrap.bind(InetAddress.getByName("0.0.0.0"), port).sync().channel();
             log.info("Video Server started at: {}", port);
             ch.closeFuture();
@@ -134,7 +134,7 @@ public class VideoServerApp {
                     }
                 }).option(ChannelOption.SO_BACKLOG, 1024).childOption(ChannelOption.SO_KEEPALIVE, true);
             try {
-                int port = Configs.getInt("server.http.port", 3333);
+                int port = Configs.getInt("server.http.port", 10788);
                 ChannelFuture f = bootstrap.bind(InetAddress.getByName("0.0.0.0"), port).sync();
                 log.info("HTTP Server started at: {}", port);
                 f.channel().closeFuture().sync();
@@ -169,7 +169,7 @@ public class VideoServerApp {
         // 同时启用http（8080）、https（8443）两个端口
         connector.setScheme("http");
         connector.setSecure(false);
-        connector.setPort(httpPort);
+        connector.setPort(serverPort0);
         connector.setRedirectPort(serverPort);
         return connector;
     }

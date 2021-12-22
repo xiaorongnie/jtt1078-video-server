@@ -75,7 +75,7 @@ public class WsServerEndpoint {
      */
     @OnError
     public void onError(Session session, Throwable error) {
-        log.info("WebSocket error -> {} {}", session.getId(), error.getMessage());
+        log.error("WebSocket error " + session.getId(), error);
         error.printStackTrace();
     }
 
