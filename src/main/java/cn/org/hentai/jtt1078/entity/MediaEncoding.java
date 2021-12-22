@@ -33,15 +33,14 @@ public final class MediaEncoding {
             if (pt == 111) {
                 return Encoding.MG726;
             }
-            if (pt >= 0 && pt <= 28)
+            if (pt >= 0 && pt <= 28) {
                 return Encoding.values()[pt];
-            else
-                return Encoding.UNKNOWN;
-        } else {
-            if (pt >= 98 && pt <= 101)
-                return Encoding.values()[pt - 98 + 29];
-            else
-                return Encoding.UNKNOWN;
+            }
+            return Encoding.UNKNOWN;
         }
+        if (pt >= 98 && pt <= 101) {
+            return Encoding.values()[pt - 98 + 29];
+        }
+        return Encoding.UNKNOWN;
     }
 }

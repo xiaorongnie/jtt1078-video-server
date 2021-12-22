@@ -88,6 +88,7 @@ public class Channel {
         broadcastAudio(timestamp, audioCodec.toPCM(data));
     }
 
+    @SuppressWarnings("unused")
     public void writeVideo(long sequence, long timeoffset, int payloadType, byte[] h264) {
         if (firstTimestamp == -1) {
             firstTimestamp = timeoffset;

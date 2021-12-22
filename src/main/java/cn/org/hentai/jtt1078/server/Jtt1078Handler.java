@@ -73,11 +73,7 @@ public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
 
     public final Session getSession() {
         Attribute<Session> attr = context.channel().attr(SESSION_KEY);
-        if (null == attr) {
-            return null;
-        } else {
-            return attr.get();
-        }
+        return null == attr ? null : attr.get();
     }
 
     public final void setSession(Session session) {

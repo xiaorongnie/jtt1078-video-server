@@ -122,7 +122,7 @@ public class WsSessionGroup {
             try {
                 byte[] newWavData = new WavCodec().fromPCM(pcmData);
                 session.getBasicRemote().sendBinary(ByteBuffer.wrap(newWavData));
-                log.info("sendWavData -> {}", newWavData.length);
+                log.info("sendWavData -> {} / {}", newWavData.length, index);
             } catch (IOException e) {
                 e.printStackTrace();
             }

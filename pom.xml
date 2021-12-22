@@ -79,7 +79,7 @@
     <!-- https://mvnrepository.com/artifact/org.bytedeco/javacv-platform -->
     <dependency>
       <groupId>org.bytedeco</groupId>
-      <artifactId>javacv-platform</artifactId>
+      <artifactId>javacv</artifactId>
       <version>1.5.5</version>
     </dependency>
 
