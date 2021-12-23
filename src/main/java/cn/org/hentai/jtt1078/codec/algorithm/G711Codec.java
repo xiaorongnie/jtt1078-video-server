@@ -44,16 +44,17 @@ public class G711Codec extends AudioCodec {
 
         /* Combine the sign, segment, and quantization bits. */
 
-        if (seg >= 8)
-            /* out of range, return maximum value. */ return (byte)(0x7F ^ mask);
-        else {
-            aval = (char)(seg << SEG_SHIFT);
-            if (seg < 2)
-                aval |= (pcm_val >> 4) & QUANT_MASK;
-            else
-                aval |= (pcm_val >> (seg + 3)) & QUANT_MASK;
-            return (byte)(aval ^ mask);
+        if (seg >= 8) {
+            /* out of range, return maximum value. */
+            return (byte)(0x7F ^ mask);
         }
+        aval = (char)(seg << SEG_SHIFT);
+        if (seg < 2) {
+            aval |= (pcm_val >> 4) & QUANT_MASK;
+        } else {
+            aval |= (pcm_val >> (seg + 3)) & QUANT_MASK;
+        }
+        return (byte)(aval ^ mask);
     }
 
     public static short alaw2linear(byte a_val) {

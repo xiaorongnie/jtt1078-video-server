@@ -1,7 +1,5 @@
 package cn.org.hentai.jtt1078.codec.algorithm;
 
-import cn.org.hentai.jtt1078.util.ByteUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,6 +21,8 @@ import java.io.FileOutputStream;
  *
  * Sun Microsystems, Inc. 2550 Garcia Avenue Mountain View, California 94043
  */
+
+import cn.org.hentai.jtt1078.util.ByteUtils;
 
 /**
  * Created by houcheng on 2019-12-11.
@@ -109,10 +109,9 @@ public class G711UCodec extends AudioCodec {
 
         if (seg >= 8) {
             return (byte)(0x7f ^ mask);
-        } else {
-            uval = (byte)((seg << 4) | ((pcm_val >> (seg + 1)) & 0xF));
-            return (byte)(uval ^ mask);
         }
+        uval = (byte)((seg << 4) | ((pcm_val >> (seg + 1)) & 0xF));
+        return (byte)(uval ^ mask);
     }
 
     static short search(short val, short[] table, short size) {
@@ -131,6 +130,7 @@ public class G711UCodec extends AudioCodec {
         }
     }
 
+    @SuppressWarnings("unused")
     static void pcm16_to_ulaw(int src_length, byte[] src_samples, byte[] dst_samples) {
         short[] s_samples = ByteUtils.toShortArray(src_samples);
         for (int i = 0, k = 0; i < s_samples.length; i++) {
