@@ -17,6 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
 
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        log.info("rtp connect -> {}", ctx.channel().remoteAddress().toString());
+        super.channelActive(ctx);
+    }
+
     private static final AttributeKey<Session> SESSION_KEY = AttributeKey.valueOf("session-key");
 
     private ChannelHandlerContext context;
@@ -72,6 +78,9 @@ public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
     }
 
     public final Session getSession() {
+        if (context == null) {
+            return null;
+        }
         Attribute<Session> attr = context.channel().attr(SESSION_KEY);
         return null == attr ? null : attr.get();
     }
@@ -94,10 +103,13 @@ public class Jtt1078Handler extends SimpleChannelInboundHandler<Packet> {
     }
 
     private void release() {
-        String tag = getSession().get("tag");
-        if (tag != null) {
-            log.info("close netty channel: {}", tag);
-            PublishManager.getInstance().close(tag);
+        Session session = getSession();
+        if (session != null) {
+            String tag = session.get("tag");
+            if (tag != null) {
+                log.info("close netty channel: {}", tag);
+                PublishManager.getInstance().close(tag);
+            }
         }
     }
 }

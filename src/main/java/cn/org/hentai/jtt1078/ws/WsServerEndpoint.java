@@ -63,7 +63,7 @@ public class WsServerEndpoint {
     public void onMsg(byte[] data, Session session) {
         String imei = String.valueOf(session.getUserProperties().get("imei"));
         // FileUtils.writeByteArrayToFile(data, "E:\\" + imei + ".wav");
-        log.info("WebSocket msg -> {} {} {}", session.getId(), imei, data.length);
+        // log.info("WebSocket msg -> {} {} {}", session.getId(), imei, data.length);
         PublishManager.getInstance().publishAudio(Arrays.copyOfRange(data, 44, data.length), imei);
     }
 
