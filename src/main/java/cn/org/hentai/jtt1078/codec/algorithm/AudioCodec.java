@@ -1,6 +1,7 @@
 package cn.org.hentai.jtt1078.codec.algorithm;
 
 import cn.org.hentai.jtt1078.codec.ffmpeg.Mg726Codec;
+import cn.org.hentai.jtt1078.codec.ffmpeg.aac.AACCodec;
 import cn.org.hentai.jtt1078.entity.MediaEncoding;
 
 /**
@@ -26,6 +27,8 @@ public abstract class AudioCodec {
             return new G711UCodec();
         } else if (MediaEncoding.Encoding.G726.ordinal() == encoding) {
             return new G726Codec();
+        } else if (MediaEncoding.Encoding.AAC.ordinal() == encoding) {
+            return new AACCodec();
         } else if (MediaEncoding.getCustomEncoding(encoding).equals(MediaEncoding.Encoding.MG726)) {
             return new Mg726Codec();
         }
