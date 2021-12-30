@@ -1,0 +1,65 @@
+package cn.org.hentai.jtt1078.test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
+
+import org.bytedeco.javacv.FFmpegFrameGrabber;
+import org.bytedeco.javacv.Frame;
+import org.bytedeco.javacv.FrameGrabber;
+
+import cn.org.hentai.jtt1078.codec.algorithm.WavCodec;
+import cn.org.hentai.jtt1078.util.FileUtils;
+
+/**
+ * PCM编码aac之后，将数据写入输出流，最后存成aac文件
+ * 
+ * @author eason
+ * @date 2022/12/30
+ */
+public class AACTest5 {
+    public static void main(String[] args) throws Exception {
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(new FileInputStream("test.aac"));
+        grabber.setSampleMode(FrameGrabber.SampleMode.SHORT);
+        grabber.start();
+
+        Frame frame2;
+        while ((frame2 = grabber.grab()) != null) {
+            System.out.println("timestamp " + frame2.timestamp);
+            Buffer buffer = frame2.samples[0];
+            if (buffer instanceof FloatBuffer) {
+                FloatBuffer floatbuffer = (FloatBuffer)buffer;
+                ByteBuffer byteBuffer = ByteBuffer.allocate(floatbuffer.capacity() * 4);
+                byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+                byteBuffer.asFloatBuffer().put(floatbuffer);
+   
+                outputStream.write(byteBuffer.array());
+                System.out.println("FloatBuffer," + outputStream.size());
+            }
+            if (buffer instanceof ShortBuffer) {
+                // ShortBuffer shortBuffer = (ShortBuffer)buffer;
+                // ByteBuffer byteBuffer = ByteBufUtils.shortToByteValue(shortBuffer);
+
+                ShortBuffer shortBuffer = (ShortBuffer)buffer;
+                ByteBuffer byteBuffer = ByteBuffer.allocate(shortBuffer.capacity() * 2);
+                byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
+                byteBuffer.asShortBuffer().put(shortBuffer);
+
+                outputStream.write(byteBuffer.array());
+                System.out.println("ShortBuffer," + outputStream.size());
+            }
+        }
+
+        FileUtils.writeByteArrayToFile(new WavCodec(44100, 2, 16).fromPCM(outputStream.toByteArray()), "aac2wav.wav");
+        grabber.close();
+        outputStream.close();
+    }
+
+}
