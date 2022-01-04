@@ -5,7 +5,7 @@ import java.io.InputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.transcodegroup.jtt1078.util.Configs;
+import com.transcodegroup.jtt1078.common.util.Configs;
 
 public class RTMPPublisher extends Thread {
     static Logger logger = LoggerFactory.getLogger(RTMPPublisher.class);

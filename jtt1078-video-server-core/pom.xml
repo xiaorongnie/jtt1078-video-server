@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <artifactId>jtt1078-video-server-core</artifactId>
   <packaging>jar</packaging>
 
@@ -11,10 +11,18 @@
     <artifactId>jtt1078-video-server</artifactId>
     <version>1.0-0</version>
     <!-- lookup parent from repository -->
-    <relativePath>../pom.xml</relativePath> 
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <dependencies>
+    <dependency>
+      <groupId>com.transcodegroup</groupId>
+      <artifactId>jtt1078-video-server-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.transcodegroup</groupId>
+      <artifactId>jtt1078-video-server-ffmpeg</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
@@ -38,33 +46,6 @@
       <groupId>de.sciss</groupId>
       <artifactId>jump3r</artifactId>
       <version>1.0.5</version>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <!-- javacv -->
-    <!-- https://mvnrepository.com/artifact/org.bytedeco/javacv-platform -->
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>javacv-platform</artifactId>
-      <version>1.5.5</version>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.bytedeco/ffmpeg-platform -->
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>ffmpeg</artifactId>
-      <version>4.3.2-1.5.5</version>
-      <classifier>windows-x86_64</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>ffmpeg</artifactId>
-      <version>4.3.2-1.5.5</version>
-      <classifier>linux-x86_64</classifier>
     </dependency>
   </dependencies>
 

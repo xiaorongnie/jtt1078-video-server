@@ -6,8 +6,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
 
+import com.transcodegroup.jtt1078.common.util.Packet;
 import com.transcodegroup.jtt1078.server.Jtt1078Decoder;
-import com.transcodegroup.jtt1078.util.Packet;
 
 /**
  * Created by houcheng on 2019-12-10.

@@ -11,7 +11,7 @@ import com.transcodegroup.jtt1078.codec.algorithm.WavCodec;
 import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioFileGrabber;
 import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioStreamGrabber;
 import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioStreamRecorder;
-import com.transcodegroup.jtt1078.util.FileUtils;
+import com.transcodegroup.jtt1078.common.util.FileUtils;
 
 public class Mg726Test {
     public static void main(String[] args) throws Exception {

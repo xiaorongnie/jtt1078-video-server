@@ -4,8 +4,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import com.transcodegroup.jtt1078.codec.algorithm.G711Codec;
+import com.transcodegroup.jtt1078.common.util.Packet;
 import com.transcodegroup.jtt1078.server.Jtt1078Decoder;
-import com.transcodegroup.jtt1078.util.Packet;
 
 /**
  * Created by matrixy on 2019/12/21.

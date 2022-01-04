@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.ByteChannel;
 
-import com.transcodegroup.jtt1078.util.ByteHolder;
+import com.transcodegroup.jtt1078.common.util.ByteHolder;
 
 /**
  * Created by matrixy on 2020/1/9.

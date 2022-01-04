@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.test;
+package com.transcodegroup.jtt1078.ffmpeg.test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -14,8 +14,8 @@ import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
-import com.transcodegroup.jtt1078.codec.algorithm.WavCodec;
-import com.transcodegroup.jtt1078.util.FileUtils;
+import com.transcodegroup.jtt1078.common.util.FileUtils;
+import com.transcodegroup.jtt1078.ffmpeg.codec.WavCodec;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2022/12/30
  */
 @Slf4j
-public class AACTest52 {
+public class GrabberG726Stream2Wav {
     public static void main(String[] args) {
         try {
             PipedOutputStream pipedOutputStream = new PipedOutputStream();

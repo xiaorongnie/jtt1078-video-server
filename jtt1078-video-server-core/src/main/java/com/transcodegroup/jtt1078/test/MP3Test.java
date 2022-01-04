@@ -1,12 +1,13 @@
 package com.transcodegroup.jtt1078.test;
 
-import de.sciss.jump3r.lowlevel.LameEncoder;
-import de.sciss.jump3r.mp3.Lame;
-
-import javax.sound.sampled.AudioFormat;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+
+import javax.sound.sampled.AudioFormat;
+
+import de.sciss.jump3r.lowlevel.LameEncoder;
+import de.sciss.jump3r.mp3.Lame;
 
 /**
  * Created by matrixy on 2020/4/27.

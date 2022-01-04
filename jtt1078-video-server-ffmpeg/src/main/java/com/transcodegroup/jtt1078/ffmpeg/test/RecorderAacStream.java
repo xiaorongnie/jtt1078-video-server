@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.test;
+package com.transcodegroup.jtt1078.ffmpeg.test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -12,26 +12,20 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 
 import org.bytedeco.ffmpeg.global.avcodec;
-import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
-import org.bytedeco.javacv.FrameGrabber;
-
-import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioStreamGrabber;
 
 /**
- * PCM编码aac之后，将数据写入输出流，最后存成aac文件
+ * 录制的PCM数据,编码到输出流，取出来之后，再存到aac文件内
  * 
  * @author eason
- * @date 2022/12/30
+ * @date 2022/01/04
  */
-public class AACTest3 {
+public class RecorderAacStream {
     public static void main(String[] args) throws Exception {
-        FileOutputStream fileOutputStream = new FileOutputStream("TestStream.aac");
+        FileOutputStream fileOutputStream = new FileOutputStream("AacRecorderStream.aac");
 
         ByteArrayOutputStream fileOS = new ByteArrayOutputStream();
         FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(fileOS, 1);
-        AudioStreamGrabber grabber = createAudioStreamGrabber();
-
         // 不可变(固定)音频比特率
         recorder.setAudioOption("crf", "0");
         // 最高质量
@@ -70,48 +64,23 @@ public class AACTest3 {
             ShortBuffer sBuff = ShortBuffer.wrap(samples, 0, nSamplesRead);
             // 指定采样点的音频采样率和声道数量
             if (recorder.recordSamples(sampleRate, numChannels, sBuff)) {
-                System.out.println("编码AAC长度 " + fileOS.size());
-                byte[] fileOSArray = fileOS.toByteArray();
-                if (fileOSArray.length > 1) {
-                    System.out.println("fileOS 1" + fileOSArray[0]);
-                    System.out.println("fileOS 2 " + fileOSArray[1]);
-
-                    // 如果是海思的g726 要跳掉前面的4个字节
-                    byte[] newBuf = new byte[fileOSArray.length - 7];
-                    System.arraycopy(fileOSArray, 7, newBuf, 0, newBuf.length);
-                    byte[] aac2PcmData = grabber.grabPcm(newBuf);
-                    if (aac2PcmData != null) {
-                        System.out.println("AAC解码PCM长度 " + aac2PcmData.length);
-                    }
-                }
-                // 写入输出文件流
-                fileOutputStream.write(fileOSArray);
+                fileOS.writeTo(fileOutputStream);
                 fileOS.reset();
+                // System.out.println("编码AAC长度 " + fileOS.size());
+                // byte[] fileOSArray = fileOS.toByteArray();
+                // fileOS.reset();
+                // if (fileOSArray.length > 1) {
+                // System.out.println("fileOS 1" + fileOSArray[0]);
+                // System.out.println("fileOS 2 " + fileOSArray[1]);
+                // }
+                // // 写入输出文件流
+                // fileOutputStream.write(fileOSArray);
+
             }
         }
         fileOutputStream.flush();
         fileOutputStream.close();
-        fileOS.flush();
         recorder.close();
-        grabber.close();
-    }
-
-    /**
-     * 创建一个音频解码器
-     * 
-     * @return
-     * @throws Exception
-     */
-    public static AudioStreamGrabber createAudioStreamGrabber() throws Exception {
-        // AAC解码器
-        AudioStreamGrabber audioStreamGrabber = new AudioStreamGrabber();
-        audioStreamGrabber.setSampleRate(44100);
-        audioStreamGrabber.setAudioChannels(1);
-        audioStreamGrabber.setSampleFormat(avutil.AV_SAMPLE_FMT_FLTP);
-        audioStreamGrabber.setAudioCodec(avcodec.AV_CODEC_ID_AAC);
-        audioStreamGrabber.setSampleMode(FrameGrabber.SampleMode.FLOAT);
-        audioStreamGrabber.start();
-        return audioStreamGrabber;
     }
 
 }

@@ -1,12 +1,12 @@
 package com.transcodegroup.jtt1078.subscriber;
 
 import com.transcodegroup.jtt1078.codec.algorithm.MP3Encoder;
+import com.transcodegroup.jtt1078.common.util.FLVUtils;
+import com.transcodegroup.jtt1078.common.util.HttpChunk;
 import com.transcodegroup.jtt1078.flv.AudioTag;
 import com.transcodegroup.jtt1078.flv.FlvAudioTagEncoder;
 import com.transcodegroup.jtt1078.flv.FlvEncoder;
 import com.transcodegroup.jtt1078.util.ByteBufUtils;
-import com.transcodegroup.jtt1078.util.FLVUtils;
-import com.transcodegroup.jtt1078.util.HttpChunk;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

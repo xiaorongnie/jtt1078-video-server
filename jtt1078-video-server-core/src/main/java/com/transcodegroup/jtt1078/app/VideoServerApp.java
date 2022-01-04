@@ -12,13 +12,13 @@ import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import com.transcodegroup.jtt1078.common.util.Configs;
 import com.transcodegroup.jtt1078.http.GeneralResponseWriter;
 import com.transcodegroup.jtt1078.http.NettyHttpServerHandler;
 import com.transcodegroup.jtt1078.publisher.PublishManager;
 import com.transcodegroup.jtt1078.server.Jtt1078Handler;
 import com.transcodegroup.jtt1078.server.Jtt1078MessageDecoder;
 import com.transcodegroup.jtt1078.server.Jtt808MessageEncoder;
-import com.transcodegroup.jtt1078.util.Configs;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

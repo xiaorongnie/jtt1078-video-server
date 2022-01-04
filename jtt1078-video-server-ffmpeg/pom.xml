@@ -16,6 +16,10 @@
   </parent>
 
   <dependencies>
+    <dependency>
+      <groupId>com.transcodegroup</groupId>
+      <artifactId>jtt1078-video-server-common</artifactId>
+    </dependency>
     <!-- javacv -->
     <!-- https://mvnrepository.com/artifact/org.bytedeco/javacv-platform -->
     <dependency>

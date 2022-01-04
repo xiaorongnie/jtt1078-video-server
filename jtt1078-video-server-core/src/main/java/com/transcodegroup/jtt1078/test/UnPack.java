@@ -3,8 +3,8 @@ package com.transcodegroup.jtt1078.test;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import com.transcodegroup.jtt1078.common.util.Packet;
 import com.transcodegroup.jtt1078.server.Jtt1078Decoder;
-import com.transcodegroup.jtt1078.util.Packet;
 
 public class UnPack
 {

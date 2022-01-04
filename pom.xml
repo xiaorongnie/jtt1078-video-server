@@ -41,11 +41,17 @@
   <modules>
     <module>jtt1078-video-server-ffmpeg</module>
     <module>jtt1078-video-server-core</module>
+    <module>jtt1078-video-server-common</module>
   </modules>
 
   <!-- 版本说明：这里统一管理依赖的版本号 -->
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.transcodegroup</groupId>
+        <artifactId>jtt1078-video-server-common</artifactId>
+        <version>1.0-0</version>
+      </dependency>
       <!-- ffmpeg相关业务 -->
       <dependency>
         <groupId>com.transcodegroup</groupId>

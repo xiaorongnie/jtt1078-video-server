@@ -1,5 +1,7 @@
 package com.transcodegroup.jtt1078.codec.algorithm;
 
+import com.transcodegroup.jtt1078.codec.AudioCodec;
+
 /**
  * Created by houcheng on 2019-12-11.
  */

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<project
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>jtt1078-video-server-common</artifactId>
+  <packaging>jar</packaging>
+
+  <parent>
+    <groupId>com.transcodegroup</groupId>
+    <artifactId>jtt1078-video-server</artifactId>
+    <version>1.0-0</version>
+    <!-- lookup parent from repository -->
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+  </dependencies>
+
+</project>

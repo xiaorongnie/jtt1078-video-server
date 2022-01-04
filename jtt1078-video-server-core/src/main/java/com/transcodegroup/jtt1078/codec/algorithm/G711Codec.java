@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import com.transcodegroup.jtt1078.codec.AudioCodec;
+
 /**
  * 核心转换，PCM转G711 Created by onlygx
  */

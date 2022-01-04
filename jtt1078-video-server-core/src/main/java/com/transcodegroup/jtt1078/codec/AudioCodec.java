@@ -1,8 +1,13 @@
-package com.transcodegroup.jtt1078.codec.algorithm;
+package com.transcodegroup.jtt1078.codec;
 
+import com.transcodegroup.jtt1078.codec.algorithm.ADPCMCodec;
+import com.transcodegroup.jtt1078.codec.algorithm.G711Codec;
+import com.transcodegroup.jtt1078.codec.algorithm.G711UCodec;
+import com.transcodegroup.jtt1078.codec.algorithm.SilenceCodec;
+import com.transcodegroup.jtt1078.codec.ffmpeg.G726Codec;
 import com.transcodegroup.jtt1078.codec.ffmpeg.Mg726Codec;
 import com.transcodegroup.jtt1078.codec.ffmpeg.aac.AACCodec;
-import com.transcodegroup.jtt1078.entity.MediaEncoding;
+import com.transcodegroup.jtt1078.common.entity.MediaEncoding;
 
 /**
  * 音频编解码抽象类

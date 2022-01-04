@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.test;
+package com.transcodegroup.jtt1078.ffmpeg.test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -12,8 +12,8 @@ import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
-import com.transcodegroup.jtt1078.codec.algorithm.WavCodec;
-import com.transcodegroup.jtt1078.util.FileUtils;
+import com.transcodegroup.jtt1078.common.util.FileUtils;
+import com.transcodegroup.jtt1078.ffmpeg.codec.WavCodec;
 
 /**
  * PCM编码aac之后，将数据写入输出流，最后存成aac文件
@@ -21,12 +21,12 @@ import com.transcodegroup.jtt1078.util.FileUtils;
  * @author eason
  * @date 2022/12/30
  */
-public class AACTest5 {
+public class GrabberAacFille2Wav {
     public static void main(String[] args) throws Exception {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(new FileInputStream("test.aac"));
+        FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(new FileInputStream("audio/test.aac"));
         // grabber.setSampleMode(FrameGrabber.SampleMode.FLOAT);
         // grabber.setSampleFormat(org.bytedeco.ffmpeg.global.avutil.AV_SAMPLE_FMT_FLTP);
         grabber.setSampleRate(44100);

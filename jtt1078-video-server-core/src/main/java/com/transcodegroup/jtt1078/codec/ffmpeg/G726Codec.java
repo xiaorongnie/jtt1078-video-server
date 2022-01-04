@@ -1,6 +1,6 @@
 package com.transcodegroup.jtt1078.codec.ffmpeg;
 
-import com.transcodegroup.jtt1078.codec.algorithm.AudioCodec;
+import com.transcodegroup.jtt1078.codec.AudioCodec;
 import com.transcodegroup.jtt1078.codec.ffmpeg.g726.G726Bit;
 
 /**

@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.util;
+package com.transcodegroup.jtt1078.common.util;
 
 /**
  * Created by matrixy on 2019/12/18.

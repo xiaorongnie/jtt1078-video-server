@@ -1,8 +1,8 @@
 package com.transcodegroup.jtt1078.server;
 
-import com.transcodegroup.jtt1078.util.ByteHolder;
-import com.transcodegroup.jtt1078.util.ByteUtils;
-import com.transcodegroup.jtt1078.util.Packet;
+import com.transcodegroup.jtt1078.common.util.ByteHolder;
+import com.transcodegroup.jtt1078.common.util.ByteUtils;
+import com.transcodegroup.jtt1078.common.util.Packet;
 
 /**
  * 1078解码器

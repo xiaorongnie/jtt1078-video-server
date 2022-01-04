@@ -9,7 +9,7 @@ import java.io.PipedOutputStream;
  * @author eason
  * @date 2022/01/04
  */
-public class PipedStreamTest {
+public class TestPipedStream {
     public static void main(String[] args) {
         try {
             PipedOutputStream pipedOutputStream = new PipedOutputStream();

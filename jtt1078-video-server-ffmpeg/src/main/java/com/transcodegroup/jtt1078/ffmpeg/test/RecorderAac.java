@@ -14,7 +14,7 @@ import javax.sound.sampled.TargetDataLine;
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 
-public class AacRecorder {
+public class RecorderAac {
     public static void main(String[] args) throws Exception {
         // wav文件
         recorderWav();

@@ -1,7 +1,7 @@
 package com.transcodegroup.jtt1078.server;
 
+import com.transcodegroup.jtt1078.common.util.Packet;
 import com.transcodegroup.jtt1078.publisher.PublishManager;
-import com.transcodegroup.jtt1078.util.Packet;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

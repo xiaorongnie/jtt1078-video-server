@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.lang.ArrayUtils;
 import org.springframework.util.StringUtils;
 
-import com.transcodegroup.jtt1078.entity.Media;
+import com.transcodegroup.jtt1078.common.entity.Media;
 import com.transcodegroup.jtt1078.entity.Rtp1078Msg;
 import com.transcodegroup.jtt1078.subscriber.Subscriber;
 

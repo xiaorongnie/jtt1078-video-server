@@ -10,9 +10,9 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.stereotype.Component;
 
-import com.transcodegroup.jtt1078.entity.MediaEncoding;
+import com.transcodegroup.jtt1078.common.entity.MediaEncoding;
+import com.transcodegroup.jtt1078.common.util.Utils;
 import com.transcodegroup.jtt1078.publisher.PublishManager;
-import com.transcodegroup.jtt1078.util.Utils;
 
 import lombok.extern.slf4j.Slf4j;
 

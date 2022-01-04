@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.entity;
+package com.transcodegroup.jtt1078.common.entity;
 
 /**
  * Created by houcheng on 2019-12-11.

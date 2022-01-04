@@ -2,7 +2,7 @@ package com.transcodegroup.jtt1078.flv;
 
 import java.io.ByteArrayOutputStream;
 
-import com.transcodegroup.jtt1078.util.Packet;
+import com.transcodegroup.jtt1078.common.util.Packet;
 
 /**
  * Created by matrixy on 2020/1/3.

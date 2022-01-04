@@ -3,8 +3,9 @@ package com.transcodegroup.jtt1078.codec.algorithm;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
+import com.transcodegroup.jtt1078.codec.AudioCodec;
+import com.transcodegroup.jtt1078.common.util.Packet;
 import com.transcodegroup.jtt1078.server.Jtt1078Decoder;
-import com.transcodegroup.jtt1078.util.Packet;
 
 /**
  * Created by houcheng on 2019-12-05. ADPCM 和 PCM转换

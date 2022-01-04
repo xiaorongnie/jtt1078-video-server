@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import com.transcodegroup.jtt1078.util.Utils;
+import com.transcodegroup.jtt1078.common.util.Utils;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

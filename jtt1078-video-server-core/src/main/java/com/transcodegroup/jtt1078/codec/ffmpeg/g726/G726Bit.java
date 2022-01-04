@@ -3,7 +3,7 @@ package com.transcodegroup.jtt1078.codec.ffmpeg.g726;
 import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
 
-import com.transcodegroup.jtt1078.codec.algorithm.AudioCodec;
+import com.transcodegroup.jtt1078.codec.AudioCodec;
 import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioStreamGrabber;
 import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioStreamRecorder;
 

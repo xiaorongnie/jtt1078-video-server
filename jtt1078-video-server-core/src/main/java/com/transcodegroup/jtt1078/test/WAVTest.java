@@ -3,8 +3,8 @@ package com.transcodegroup.jtt1078.test;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import com.transcodegroup.jtt1078.util.ByteUtils;
-import com.transcodegroup.jtt1078.util.Packet;
+import com.transcodegroup.jtt1078.common.util.ByteUtils;
+import com.transcodegroup.jtt1078.common.util.Packet;
 
 /**
  * Created by matrixy on 2019/12/18.

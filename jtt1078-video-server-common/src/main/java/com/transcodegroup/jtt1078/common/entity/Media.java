@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.entity;
+package com.transcodegroup.jtt1078.common.entity;
 
 /**
  * Created by houcheng on 2019-12-11. 数据流，可能是视频或是音频，视频为FLV封装，音频为PCM编码的片断

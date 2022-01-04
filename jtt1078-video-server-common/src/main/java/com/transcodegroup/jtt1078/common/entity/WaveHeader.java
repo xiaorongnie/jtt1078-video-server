@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.entity;
+package com.transcodegroup.jtt1078.common.entity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

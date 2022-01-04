@@ -11,7 +11,7 @@ import javax.websocket.Session;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.transcodegroup.jtt1078.codec.algorithm.WavCodec;
-import com.transcodegroup.jtt1078.util.ByteUtils;
+import com.transcodegroup.jtt1078.common.util.ByteUtils;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -6,16 +6,16 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.transcodegroup.jtt1078.codec.algorithm.AudioCodec;
-import com.transcodegroup.jtt1078.entity.Media;
-import com.transcodegroup.jtt1078.entity.MediaEncoding;
-import com.transcodegroup.jtt1078.entity.MediaEncoding.Encoding;
+import com.transcodegroup.jtt1078.codec.AudioCodec;
+import com.transcodegroup.jtt1078.common.entity.Media;
+import com.transcodegroup.jtt1078.common.entity.MediaEncoding;
+import com.transcodegroup.jtt1078.common.entity.MediaEncoding.Encoding;
+import com.transcodegroup.jtt1078.common.util.ByteHolder;
+import com.transcodegroup.jtt1078.common.util.Configs;
 import com.transcodegroup.jtt1078.flv.FlvEncoder;
 import com.transcodegroup.jtt1078.subscriber.RTMPPublisher;
 import com.transcodegroup.jtt1078.subscriber.Subscriber;
 import com.transcodegroup.jtt1078.subscriber.VideoSubscriber;
-import com.transcodegroup.jtt1078.util.ByteHolder;
-import com.transcodegroup.jtt1078.util.Configs;
 import com.transcodegroup.jtt1078.ws.WsSessionGroup;
 
 import io.netty.channel.ChannelHandlerContext;

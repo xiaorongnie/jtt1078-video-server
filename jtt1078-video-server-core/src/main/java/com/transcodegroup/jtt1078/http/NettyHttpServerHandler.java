@@ -3,11 +3,11 @@ package com.transcodegroup.jtt1078.http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.transcodegroup.jtt1078.entity.Media;
+import com.transcodegroup.jtt1078.common.entity.Media;
+import com.transcodegroup.jtt1078.common.util.FileUtils;
+import com.transcodegroup.jtt1078.common.util.Packet;
 import com.transcodegroup.jtt1078.publisher.PublishManager;
 import com.transcodegroup.jtt1078.server.Session;
-import com.transcodegroup.jtt1078.util.FileUtils;
-import com.transcodegroup.jtt1078.util.Packet;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

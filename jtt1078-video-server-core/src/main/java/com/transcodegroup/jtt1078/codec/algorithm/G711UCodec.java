@@ -22,7 +22,8 @@ import java.io.FileOutputStream;
  * Sun Microsystems, Inc. 2550 Garcia Avenue Mountain View, California 94043
  */
 
-import com.transcodegroup.jtt1078.util.ByteUtils;
+import com.transcodegroup.jtt1078.codec.AudioCodec;
+import com.transcodegroup.jtt1078.common.util.ByteUtils;
 
 /**
  * Created by houcheng on 2019-12-11.
