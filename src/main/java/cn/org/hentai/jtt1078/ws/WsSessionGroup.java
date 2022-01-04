@@ -11,6 +11,7 @@ import javax.websocket.Session;
 import org.apache.commons.lang.ArrayUtils;
 
 import cn.org.hentai.jtt1078.codec.algorithm.WavCodec;
+import cn.org.hentai.jtt1078.util.ByteUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,38 +55,37 @@ public class WsSessionGroup {
      *            pcm数据
      */
     public static void onAudioData(String imei, byte[] data) {
-        return;
-        // for (Session session : sessionHashMap.values()) {
-        // String key = String.valueOf(session.getUserProperties().get("imei"));
-        // if (imei.equals(key)) {
-        // Object storagData = session.getUserProperties().get("pcm");
-        // byte[] pcmDate = null;
-        // if (storagData == null) {
-        // session.getUserProperties().put("pcm", data);
-        // } else {
-        // byte[] storagPcm = (byte[])storagData;
-        // pcmDate = ByteUtils.concat(storagPcm, data);
-        // session.getUserProperties().put("pcm", pcmDate);
-        // }
-        // // 1秒以上数据才发送一次,暂时的,前端得加缓存一直播放
-        // if (pcmDate != null && pcmDate.length > 16000) {
-        // Object codecObject = session.getUserProperties().get("codec");
-        // if (codecObject == null) {
-        // codecObject = new WavCodec();
-        // session.getUserProperties().put("codec", codecObject);
-        // }
-        // WavCodec wavCodec = (WavCodec)codecObject;
-        // ByteBuffer wavBuffer = ByteBuffer.wrap(wavCodec.fromPCM(pcmDate));
-        // try {
-        // session.getBasicRemote().sendBinary(wavBuffer);
-        // log.info("Session -> {}", wavBuffer.array().length);
-        // } catch (IOException e) {
-        // e.printStackTrace();
-        // }
-        // session.getUserProperties().remove("pcm");
-        // }
-        // }
-        // }
+        for (Session session : sessionHashMap.values()) {
+            String key = String.valueOf(session.getUserProperties().get("imei"));
+            if (imei.equals(key)) {
+                Object storagData = session.getUserProperties().get("pcm");
+                byte[] pcmDate = null;
+                if (storagData == null) {
+                    session.getUserProperties().put("pcm", data);
+                } else {
+                    byte[] storagPcm = (byte[])storagData;
+                    pcmDate = ByteUtils.concat(storagPcm, data);
+                    session.getUserProperties().put("pcm", pcmDate);
+                }
+                // 1秒以上数据才发送一次,暂时的,前端得加缓存一直播放
+                if (pcmDate != null && pcmDate.length > 16000) {
+                    Object codecObject = session.getUserProperties().get("codec");
+                    if (codecObject == null) {
+                        codecObject = new WavCodec();
+                        session.getUserProperties().put("codec", codecObject);
+                    }
+                    WavCodec wavCodec = (WavCodec)codecObject;
+                    ByteBuffer wavBuffer = ByteBuffer.wrap(wavCodec.fromPCM(pcmDate));
+                    try {
+                        session.getBasicRemote().sendBinary(wavBuffer);
+                        log.info("Session -> {}", wavBuffer.array().length);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    session.getUserProperties().remove("pcm");
+                }
+            }
+        }
     }
 
     public static void onAudioData(byte[] data) {
