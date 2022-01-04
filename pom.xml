@@ -1,13 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>cn.org.hentai</groupId>
+  <groupId>com.transcodegroup</groupId>
   <artifactId>jtt1078-video-server</artifactId>
   <version>1.0-0</version>
+  <packaging>pom</packaging>
 
   <name>jtt1078-video-server</name>
-  <url>http://www.hentai.org.cn/</url>
+  <url>http://www.transcodegroup.com</url>
 
   <parent>
     <groupId>org.springframework.boot</groupId>
@@ -26,15 +28,6 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <javacpp.platform.dependencies>windows-x86_64</javacpp.platform.dependencies>
     <!-- 下边是参考用的 -->
-    <javacpp.platform.android-arm>android-arm</javacpp.platform.android-arm>
-    <javacpp.platform.android-arm64>android-arm64</javacpp.platform.android-arm64>
-    <javacpp.platform.android-x86>android-x86</javacpp.platform.android-x86>
-    <javacpp.platform.android-x86_64>android-x86_64</javacpp.platform.android-x86_64>
-    <javacpp.platform.ios-arm>ios-arm</javacpp.platform.ios-arm>
-    <javacpp.platform.ios-arm64>ios-arm64</javacpp.platform.ios-arm64>
-    <javacpp.platform.ios-x86>ios-x86</javacpp.platform.ios-x86>
-    <javacpp.platform.ios-x86_64>ios-x86_64</javacpp.platform.ios-x86_64>
-
     <javacpp.platform.linux-armhf>linux-armhf</javacpp.platform.linux-armhf>
     <javacpp.platform.linux-arm64>linux-arm64</javacpp.platform.linux-arm64>
     <javacpp.platform.linux-ppc64le>linux-ppc64le</javacpp.platform.linux-ppc64le>
@@ -45,131 +38,53 @@
     <javacpp.platform.windows-x86_64>windows-x86_64</javacpp.platform.windows-x86_64>
   </properties>
 
+  <modules>
+    <module>jtt1078-video-server-ffmpeg</module>
+    <module>jtt1078-video-server-core</module>
+  </modules>
+
+  <!-- 版本说明：这里统一管理依赖的版本号 -->
+  <dependencyManagement>
+    <dependencies>
+      <!-- ffmpeg相关业务 -->
+      <dependency>
+        <groupId>com.transcodegroup</groupId>
+        <artifactId>jtt1078-video-server-ffmpeg</artifactId>
+        <version>1.0-0</version>
+      </dependency>
+      <!-- 自己相关业务 -->
+      <dependency>
+        <groupId>com.transcodegroup</groupId>
+        <artifactId>jtt1078-video-server-core</artifactId>
+        <version>1.0-0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
+    <!-- 热启动,测试，简化 -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-websocket</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.netty</groupId>
-      <artifactId>netty-all</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>net.sf.json-lib</groupId>
-      <artifactId>json-lib</artifactId>
-      <version>2.4</version>
-      <classifier>jdk15</classifier>
-    </dependency>
-    <!--pcm转mp3 -->
-    <dependency>
-      <groupId>de.sciss</groupId>
-      <artifactId>jump3r</artifactId>
-      <version>1.0.5</version>
+      <artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <optional>true</optional>
     </dependency>
-    <!-- javacv -->
-    <!-- https://mvnrepository.com/artifact/org.bytedeco/javacv-platform -->
     <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>javacv-platform</artifactId>
-      <version>1.5.5</version>
-    </dependency>
-
-    <!-- https://mvnrepository.com/artifact/org.bytedeco/ffmpeg-platform -->
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>ffmpeg</artifactId>
-      <version>4.3.2-1.5.5</version>
-      <classifier>windows-x86_64</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.bytedeco</groupId>
-      <artifactId>ffmpeg</artifactId>
-      <version>4.3.2-1.5.5</version>
-      <classifier>linux-x86_64</classifier>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.junit.vintage</groupId>
+          <artifactId>junit-vintage-engine</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
   </dependencies>
-
-  <build>
-    <finalName>${project.artifactId}-${project.version}</finalName>
-    <resources>
-      <resource>
-        <directory>src/main/java</directory>
-        <includes>
-          <include>**/*.xml</include>
-        </includes>
-        <filtering>false</filtering>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>application.properties</include>
-          <include>*.properties</include>
-          <include>*.xml</include>
-          <include>*.txt</include>
-          <include>*.html</include>
-          <include>*.conf</include>
-          <include>*.bin</include>
-        </includes>
-      </resource>
-    </resources>
-
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <!-- 是否要把第三方jar加入到类构建路径 -->
-              <addClasspath>true</addClasspath>
-              <!-- 外部依赖jar包的最终位置 -->
-              <classpathPrefix>lib/</classpathPrefix>
-              <!-- 项目启动类 -->
-              <mainClass>cn.org.hentai.jtt1078.app.VideoServerApp</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
-      <!--拷贝依赖到jar外面的lib目录 -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-lib</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>target/lib</outputDirectory>
-              <excludeTransitive>false</excludeTransitive>
-              <stripVersion>false</stripVersion>
-              <includeScope>runtime</includeScope>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- TEST -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <skipTests>true</skipTests>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>
