@@ -33,12 +33,12 @@ public class WsServerEndpoint {
     public void onOpen(Session session, @PathParam(value = "imei") String imei) {
         session.getUserProperties().put("imei", Utils.formatPhoneNumber(imei));
         WsSessionGroup.put(session);
-        log.info("WebSocket open -> {}, {}", session.getId(), imei);
+        log.info("WebSocket open (WAV 8k 16bit) -> {}, {}", session.getId(), imei);
     }
 
     @OnClose
     public void onClose(Session session) {
-        log.info("WebSocket close -> {} {}", session.getId(), session.getUserProperties().get("imei"));
+        log.info("WebSocket close (WAV 8k 16bit) -> {} {}", session.getId(), session.getUserProperties().get("imei"));
         WsSessionGroup.remove(session);
     }
 
