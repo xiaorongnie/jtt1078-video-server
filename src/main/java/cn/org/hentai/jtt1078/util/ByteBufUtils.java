@@ -1,11 +1,11 @@
 package cn.org.hentai.jtt1078.util;
 
-import io.netty.buffer.ByteBuf;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.ShortBuffer;
 import java.nio.charset.StandardCharsets;
+
+import io.netty.buffer.ByteBuf;
 
 /**
  * author:zhouyili (11861744@qq.com)

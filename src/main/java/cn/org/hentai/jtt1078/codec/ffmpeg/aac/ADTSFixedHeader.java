@@ -159,12 +159,12 @@ public class ADTSFixedHeader {
      */
     public static byte[] getADTS(int len) {
         len = len + 7;
-        int profile = 0x01; // AAC LC
-        int freqIdx = 0x07; // 22050
+        int profile = 0x02; // AAC LC
+        int freqIdx = 0x0b; // 22050
         int chanCfg = 1; // 2 Channel
         byte[] adts = new byte[7];
         adts[0] = (byte)0xFF;
-        adts[1] = (byte)0xF9;
+        adts[1] = (byte)0xF1;
         adts[2] = (byte)(((profile - 1) << 6) + (freqIdx << 2) + (chanCfg >> 2));
         adts[3] = (byte)(((chanCfg & 3) << 6) + (len >> 11));
         adts[4] = (byte)((len & 0x7FF) >> 3);
@@ -172,4 +172,35 @@ public class ADTSFixedHeader {
         adts[6] = (byte)0xFC;
         return adts;
     }
+
+    /**
+     * 封装AAC头
+     * 
+     * @param len
+     * @return 封装一帧AAC=1024PCM
+     */
+    public static byte[] getADTS2(int len) {
+        return getADTSHeader(1, 0x0b, 1, len);
+    }
+
+    /* 获取ACC的ADTS头
+    * @param profile:  0:Main profile   1:AAC LC  2:SSR 3 reserved
+    * @param freqIdx: 0:96000 HZ 1:88200 HZ 2:64000HZ 3:48000HZ 4:44100HZ 5:32000HZ 6:24000HZ 7:22050HZ 8:16000HZ 9:12000HZ
+    * @param chanCfg: 0:Defined in AOT Specifc Config  1: 1 channel: front-center  2: 2 channels: front-left, front-right
+    * @param aacDataLen aac裸流的长度
+    * 更多参数可取值参考 https://blog.csdn.net/tantion/article/details/82743942
+    */
+    public static byte[] getADTSHeader(int profile, int freqIdx, int chanCfg, int aacDataLen) {
+        int dataLen = aacDataLen + 7; // AAC裸帧的数据长度加上ADTS的头长度
+        byte[] buffer = new byte[7];
+        buffer[0] = (byte)0xFF;
+        buffer[1] = (byte)0xF1;
+        buffer[2] = (byte)((profile << 6) + (freqIdx << 2) + (chanCfg >> 2));
+        buffer[3] = (byte)(((chanCfg & 3) << 6) + (dataLen >> 11));
+        buffer[4] = (byte)((dataLen & 0x7FF) >> 3);
+        buffer[5] = (byte)(((dataLen & 7) << 5) + 0x1F);
+        buffer[6] = (byte)0xFC;
+        return buffer;
+    }
+
 }

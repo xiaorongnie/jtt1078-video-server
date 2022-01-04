@@ -16,7 +16,7 @@ import org.bytedeco.javacv.FFmpegFrameRecorder;
 
 public class AACTest2 {
     public static void main(String[] args) throws Exception {
-        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(new File("Test01.aac"), 2);
+        FFmpegFrameRecorder recorder = new FFmpegFrameRecorder(new File("test.aac"), 2);
         // 不可变(固定)音频比特率
         recorder.setAudioOption("crf", "0");
         // 最高质量
@@ -33,7 +33,7 @@ public class AACTest2 {
         // wav文件
         recorderWav(recorder);
         // 麦克风数据
-        recorderMic(recorder);
+        // recorderMic(recorder);
         recorder.close();
     }
 
@@ -45,8 +45,7 @@ public class AACTest2 {
     public static void recorderWav(FFmpegFrameRecorder recorder) throws Exception {
         int len = -1;
         byte[] buffer = new byte[1024];
-        FileInputStream fis =
-            new FileInputStream("E:\\eclipse-jee-neon-2-win32-x86_64\\workspace2020\\webvoice\\docs\\temp\\test.wav");
+        FileInputStream fis = new FileInputStream("test.wav");
         while ((len = fis.read(buffer)) > -1) {
             int nSamplesRead = len / 2;
             short[] samples = new short[nSamplesRead];

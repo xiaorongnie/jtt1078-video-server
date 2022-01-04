@@ -385,6 +385,9 @@ public class AudioStreamRecorder extends FrameRecorder {
      * @throws Exception
      */
     public synchronized byte[] recordShortSamples(byte[] data) {
+        if (data == null) {
+            return null;
+        }
         try {
             short[] samples_short_buf = new short[data.length / 2];
             ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN).asShortBuffer().get(samples_short_buf);

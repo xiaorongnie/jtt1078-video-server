@@ -117,11 +117,17 @@ public class WsSessionGroup {
         }
     }
 
-    private static void sendWavData(byte[] pcmData, int index) {
+    public static void sendWavData(byte[] pcmData, int index) {
         for (Session session : sessionHashMap.values()) {
             try {
                 byte[] newWavData = new WavCodec().fromPCM(pcmData);
                 session.getBasicRemote().sendBinary(ByteBuffer.wrap(newWavData));
+                try {
+                    TimeUnit.MILLISECONDS.sleep(40);
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
                 log.info("sendWavData -> {} / {}", newWavData.length, index);
             } catch (IOException e) {
                 e.printStackTrace();

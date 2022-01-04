@@ -8,9 +8,9 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
-import org.bytedeco.javacv.FrameGrabber;
 
 import cn.org.hentai.jtt1078.codec.algorithm.WavCodec;
 import cn.org.hentai.jtt1078.util.FileUtils;
@@ -27,7 +27,11 @@ public class AACTest5 {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
         FFmpegFrameGrabber grabber = new FFmpegFrameGrabber(new FileInputStream("test.aac"));
-        grabber.setSampleMode(FrameGrabber.SampleMode.SHORT);
+        // grabber.setSampleMode(FrameGrabber.SampleMode.FLOAT);
+        // grabber.setSampleFormat(org.bytedeco.ffmpeg.global.avutil.AV_SAMPLE_FMT_FLTP);
+        grabber.setSampleRate(44100);
+        grabber.setAudioChannels(1);
+        grabber.setSampleFormat(avutil.AV_SAMPLE_FMT_S16);
         grabber.start();
 
         Frame frame2;
@@ -39,7 +43,6 @@ public class AACTest5 {
                 ByteBuffer byteBuffer = ByteBuffer.allocate(floatbuffer.capacity() * 4);
                 byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
                 byteBuffer.asFloatBuffer().put(floatbuffer);
-   
                 outputStream.write(byteBuffer.array());
                 System.out.println("FloatBuffer," + outputStream.size());
             }
@@ -57,7 +60,7 @@ public class AACTest5 {
             }
         }
 
-        FileUtils.writeByteArrayToFile(new WavCodec(44100, 2, 16).fromPCM(outputStream.toByteArray()), "aac2wav.wav");
+        FileUtils.writeByteArrayToFile(new WavCodec(44100, 1, 16).fromPCM(outputStream.toByteArray()), "aac2wav.wav");
         grabber.close();
         outputStream.close();
     }

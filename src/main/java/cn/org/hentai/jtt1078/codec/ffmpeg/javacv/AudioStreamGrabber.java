@@ -82,6 +82,7 @@ import static org.bytedeco.ffmpeg.presets.avutil.AVERROR_EAGAIN;
 
 import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.Map.Entry;
 
@@ -516,18 +517,32 @@ public class AudioStreamGrabber extends FrameGrabber {
      * 抓取PCM数据
      * 
      * @param data
+     *            压缩的音频数据
      * @return
      * @throws Exception
      */
     public synchronized byte[] grabPcm(byte[] data) {
+        if (data == null || data.length == 0) {
+            return null;
+        }
         try {
             Frame frame = grabAudio(data);
             if (frame == null) {
                 return null;
             }
             Buffer buffer = frame.samples[0];
-            ByteBuffer byteBuffer = ByteBufUtils.shortToByteValue((ShortBuffer)buffer);
-            return byteBuffer.array();
+            if (buffer instanceof FloatBuffer) {
+                FloatBuffer floatbuffer = (FloatBuffer)buffer;
+                ByteBuffer byteBuffer = ByteBuffer.allocate(floatbuffer.capacity() * 4);
+                byteBuffer.asFloatBuffer().put(floatbuffer);
+                return byteBuffer.array();
+            }
+            if (buffer instanceof ShortBuffer) {
+                ShortBuffer shortBuffer = (ShortBuffer)buffer;
+                ByteBuffer byteBuffer = ByteBufUtils.shortToByteValue(shortBuffer);
+                return byteBuffer.array();
+            }
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
