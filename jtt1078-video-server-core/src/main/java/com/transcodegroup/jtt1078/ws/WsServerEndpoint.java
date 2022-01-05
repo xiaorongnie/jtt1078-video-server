@@ -32,23 +32,20 @@ public class WsServerEndpoint {
 
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "imei") String imei) {
-        session.getUserProperties().put("imei", Utils.formatPhoneNumber(imei));
-        WsSessionGroup.put(session);
         log.info("WebSocket open (WAV 8k 16bit) -> {}, {}", session.getId(), imei);
+        WsSessionGroup.put(new WsSession(session, Utils.formatPhoneNumber(imei)));
     }
 
     @OnClose
     public void onClose(Session session) {
         log.info("WebSocket close (WAV 8k 16bit) -> {} {}", session.getId(), session.getUserProperties().get("imei"));
-        WsSessionGroup.remove(session);
+        WsSessionGroup.remove(session.getId());
     }
 
     @OnMessage
     public void onMsg(byte[] data, Session session) {
-        String imei = String.valueOf(session.getUserProperties().get("imei"));
-        // FileUtils.writeByteArrayToFile(data, "E:\\" + imei + ".wav");
-        // log.info("WebSocket msg -> {} {} {}", session.getId(), imei, data.length);
-        PublishManager.getInstance().publishAudio(Arrays.copyOfRange(data, 44, data.length), imei);
+        PublishManager.getInstance().publishAudio(Arrays.copyOfRange(data, 44, data.length),
+            WsSessionGroup.getImei(session));
     }
 
     @OnError

@@ -11,7 +11,6 @@ import javax.websocket.Session;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.transcodegroup.jtt1078.codec.algorithm.WavCodec;
-import com.transcodegroup.jtt1078.common.util.ByteUtils;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,15 +26,15 @@ public class WsSessionGroup {
     /**
      * WEB端对讲客会话列表
      */
-    private static ConcurrentHashMap<String, Session> sessionHashMap = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<String, WsSession> sessionHashMap = new ConcurrentHashMap<>();
 
     /**
      * 加入会话会话
      * 
-     * @param session
+     * @param wsSession
      */
-    public static void put(Session session) {
-        sessionHashMap.put(session.getId(), session);
+    public static void put(WsSession wsSession) {
+        sessionHashMap.put(wsSession.getSession().getId(), wsSession);
     }
 
     /**
@@ -43,47 +42,38 @@ public class WsSessionGroup {
      * 
      * @param session
      */
-    public static void remove(Session session) {
-        sessionHashMap.remove(session.getId());
+    public static void remove(String id) {
+        sessionHashMap.remove(id);
     }
 
     /**
-     * 收到音频数据,转发给平台或者APP
+     * 查找设备
      * 
-     * @param target
-     *            设备号
-     * @param data
-     *            pcm数据
+     * @param session
      */
+    public static String getImei(Session session) {
+        return getImei(session.getId());
+    }
+
+    /**
+     * 查找设备
+     * 
+     * @param session
+     */
+    public static String getImei(String id) {
+        WsSession wsSession = sessionHashMap.get(id);
+        return wsSession == null ? null : wsSession.getImei();
+    }
+
     public static void onAudioData(String target, byte[] data) {
-        for (Session session : sessionHashMap.values()) {
-            String imei = String.valueOf(session.getUserProperties().get("imei"));
-            if (target.equals(imei)) {
-                Object storagData = session.getUserProperties().get("pcm");
-                byte[] pcmDate = null;
-                if (storagData == null) {
-                    session.getUserProperties().put("pcm", data);
-                } else {
-                    byte[] storagPcm = (byte[])storagData;
-                    pcmDate = ByteUtils.concat(storagPcm, data);
-                    session.getUserProperties().put("pcm", pcmDate);
-                }
-                // 1秒以上数据才发送一次,暂时的,前端得加缓存一直播放
-                if (pcmDate != null && pcmDate.length > 16000) {
-                    Object codecObject = session.getUserProperties().get("codec");
-                    if (codecObject == null) {
-                        codecObject = new WavCodec();
-                        session.getUserProperties().put("codec", codecObject);
-                    }
-                    WavCodec wavCodec = (WavCodec)codecObject;
-                    ByteBuffer wavBuffer = ByteBuffer.wrap(wavCodec.fromPCM(pcmDate));
-                    try {
-                        session.getBasicRemote().sendBinary(wavBuffer);
-                        log.info("Session -> {}", wavBuffer.array().length);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    session.getUserProperties().remove("pcm");
+        for (WsSession wsSession : sessionHashMap.values()) {
+            if (target.equals(wsSession.getImei())) {
+                ByteBuffer wavBuffer = ByteBuffer.wrap(wsSession.getAudioCodec().fromPCM(data));
+                try {
+                    wsSession.getSession().getBasicRemote().sendBinary(wavBuffer);
+                    log.info("Session -> {}", wavBuffer.array().length);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -118,10 +108,10 @@ public class WsSessionGroup {
      * @param index
      */
     public static void broadcastPcmDataChunks(byte[] pcmData, int index) {
-        for (Session session : sessionHashMap.values()) {
+        for (WsSession wsSession : sessionHashMap.values()) {
             try {
                 byte[] newWavData = new WavCodec().fromPCM(pcmData);
-                session.getBasicRemote().sendBinary(ByteBuffer.wrap(newWavData));
+                wsSession.getSession().getBasicRemote().sendBinary(ByteBuffer.wrap(newWavData));
                 try {
                     TimeUnit.MILLISECONDS.sleep(40);
                 } catch (InterruptedException e) {
