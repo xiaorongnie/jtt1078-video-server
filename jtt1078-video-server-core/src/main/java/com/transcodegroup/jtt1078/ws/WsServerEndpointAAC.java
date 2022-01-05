@@ -25,8 +25,8 @@ import lombok.extern.slf4j.Slf4j;
  * @author eason
  * @date 2021/04/30
  */
-@Component
-@ServerEndpoint("/talk/aac/{imei}")
+ @Component
+ @ServerEndpoint("/talk/aac/{imei}")
 @Slf4j
 public class WsServerEndpointAAC {
 

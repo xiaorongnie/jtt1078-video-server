@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.app;
+package com.transcodegroup.jtt1078;
 
 import java.net.InetAddress;
 
@@ -45,8 +45,8 @@ import sun.misc.SignalHandler;
  */
 @SpringBootApplication
 @Slf4j
-@ComponentScan("cn.org.hentai.jtt1078.*")
-public class VideoServerApp {
+@ComponentScan("com.transcodegroup.jtt1078.*")
+public class App {
 
     @Value("${server.port0:8080}")
     private Integer serverPort0;
@@ -55,7 +55,7 @@ public class VideoServerApp {
     private Integer serverPort;
 
     public static void main(String[] args) throws Exception {
-        SpringApplication app = new SpringApplication(VideoServerApp.class);
+        SpringApplication app = new SpringApplication(App.class);
         app.setBannerMode(Mode.LOG);
         app.run(args);
         Configs.init("/app.properties");

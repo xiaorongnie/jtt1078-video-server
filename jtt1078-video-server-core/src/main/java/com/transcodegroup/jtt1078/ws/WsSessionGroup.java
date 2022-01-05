@@ -48,17 +48,17 @@ public class WsSessionGroup {
     }
 
     /**
-     * 收到音频数据
+     * 收到音频数据,转发给平台或者APP
      * 
-     * @param imei
+     * @param target
      *            设备号
      * @param data
      *            pcm数据
      */
-    public static void onAudioData(String imei, byte[] data) {
+    public static void onAudioData(String target, byte[] data) {
         for (Session session : sessionHashMap.values()) {
-            String key = String.valueOf(session.getUserProperties().get("imei"));
-            if (imei.equals(key)) {
+            String imei = String.valueOf(session.getUserProperties().get("imei"));
+            if (target.equals(imei)) {
                 Object storagData = session.getUserProperties().get("pcm");
                 byte[] pcmDate = null;
                 if (storagData == null) {
@@ -89,18 +89,12 @@ public class WsSessionGroup {
         }
     }
 
-    public static void onAudioData(byte[] data) {
-        for (Session session : sessionHashMap.values()) {
-            try {
-                session.getBasicRemote().sendBinary(ByteBuffer.wrap(data));
-                log.info("Session -> {} kb", data.length / 1024);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static void onAudioData2(byte[] wavData) {
+    /**
+     * 音频分小块发送,
+     * 
+     * @param wavData
+     */
+    public static void broadcastWavDataChunks(byte[] wavData) {
         byte[] pcmData = Arrays.copyOfRange(wavData, 44, wavData.length);
         // 一包包含320个16bit采样点
         int block = 320 * 25;
@@ -108,17 +102,22 @@ public class WsSessionGroup {
         int times = pcmData.length / pcmBlock;
         for (int i = 0; i < times; i++) {
             byte[] data = ArrayUtils.subarray(pcmData, pcmBlock * i, pcmBlock * (i + 1));;
-            sendWavData(data, i);
+            broadcastPcmDataChunks(data, i);
             try {
                 TimeUnit.MILLISECONDS.sleep(block / 8);
             } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
     }
 
-    public static void sendWavData(byte[] pcmData, int index) {
+    /**
+     * 广播PCM数据到前端或者APP
+     * 
+     * @param pcmData
+     * @param index
+     */
+    public static void broadcastPcmDataChunks(byte[] pcmData, int index) {
         for (Session session : sessionHashMap.values()) {
             try {
                 byte[] newWavData = new WavCodec().fromPCM(pcmData);
@@ -126,7 +125,6 @@ public class WsSessionGroup {
                 try {
                     TimeUnit.MILLISECONDS.sleep(40);
                 } catch (InterruptedException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 log.info("sendWavData -> {} / {}", newWavData.length, index);

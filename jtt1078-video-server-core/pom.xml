@@ -86,7 +86,7 @@
               <!-- 外部依赖jar包的最终位置 -->
               <classpathPrefix>lib/</classpathPrefix>
               <!-- 项目启动类 -->
-              <mainClass>com.transcodegroup.jtt1078.app.VideoServerApp</mainClass>
+              <mainClass>com.transcodegroup.jtt1078.App</mainClass>
             </manifest>
           </archive>
         </configuration>
