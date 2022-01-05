@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.ffmpeg.test;
+package com.transcodegroup.jtt1078.ffmpeg;
 
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;

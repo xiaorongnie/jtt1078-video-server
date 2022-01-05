@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.ffmpeg.test;
+package com.transcodegroup.jtt1078.ffmpeg;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
@@ -31,9 +31,9 @@ public class RecorderAacStream {
         // 最高质量
         recorder.setAudioQuality(0);
         // 音频比特率
-        recorder.setAudioBitrate(192000);
+        // recorder.setAudioBitrate(192000);
         // 音频采样率
-        recorder.setSampleRate(44100);
+        recorder.setSampleRate(8000);
         // 双声道、立体声
         recorder.setAudioChannels(1);
         // AAC
@@ -43,7 +43,7 @@ public class RecorderAacStream {
         recorder.start();
 
         // 麦克风数据
-        AudioFormat format = new AudioFormat(44100.0F, 16, 2, true, false);
+        AudioFormat format = new AudioFormat(8000, 16, 1, true, false);
         TargetDataLine line = (TargetDataLine)AudioSystem.getLine(new DataLine.Info(TargetDataLine.class, format));
         line.open(format);
         line.start();
@@ -65,8 +65,8 @@ public class RecorderAacStream {
             // 指定采样点的音频采样率和声道数量
             if (recorder.recordSamples(sampleRate, numChannels, sBuff)) {
                 fileOS.writeTo(fileOutputStream);
+                System.out.println("编码AAC长度 " + fileOS.size());
                 fileOS.reset();
-                // System.out.println("编码AAC长度 " + fileOS.size());
                 // byte[] fileOSArray = fileOS.toByteArray();
                 // fileOS.reset();
                 // if (fileOSArray.length > 1) {
@@ -75,7 +75,6 @@ public class RecorderAacStream {
                 // }
                 // // 写入输出文件流
                 // fileOutputStream.write(fileOSArray);
-
             }
         }
         fileOutputStream.flush();

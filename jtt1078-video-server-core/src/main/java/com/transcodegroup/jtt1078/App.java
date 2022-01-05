@@ -45,7 +45,7 @@ import sun.misc.SignalHandler;
  */
 @SpringBootApplication
 @Slf4j
-@ComponentScan("com.transcodegroup.jtt1078.*")
+@ComponentScan("com.transcodegroup.*")
 public class App {
 
     @Value("${server.port0:8080}")

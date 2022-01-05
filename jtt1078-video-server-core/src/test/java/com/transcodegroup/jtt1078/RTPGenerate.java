@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.test;
+package com.transcodegroup.jtt1078;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

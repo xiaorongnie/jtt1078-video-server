@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.ffmpeg.test;
+package com.transcodegroup.jtt1078.ffmpeg;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;

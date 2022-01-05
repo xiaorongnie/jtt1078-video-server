@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.test;
+package com.transcodegroup.jtt1078;
 
 import java.nio.ShortBuffer;
 import java.util.Arrays;
