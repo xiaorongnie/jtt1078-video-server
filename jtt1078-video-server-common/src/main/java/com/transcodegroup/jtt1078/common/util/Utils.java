@@ -1,5 +1,11 @@
 package com.transcodegroup.jtt1078.common.util;
 
+/**
+ * 常用单元
+ * 
+ * @author eason
+ * @date 2022/01/08
+ */
 public class Utils {
     /**
      * 获取数据包类型

@@ -1,25 +1,30 @@
 package com.transcodegroup.jtt1078.common.util;
 
 /**
+ * 10进制字符串字符串转BCD编码
  * 
- * TG 10进制字符串字符串转BCD编码
+ * @author eason
+ * @date 2022/01/08
  */
 public class BcdUtil {
 
     /**
      * 获取需要下发的设备的终端手机号
      */
-    public static byte[] getPhoneNumber(String sim) {
+    public static byte[] getPhoneNumber(String phoneNumber) {
         StringBuffer buffer = new StringBuffer();
-        for (int i = 0; i < 12 - sim.length(); i++) {
+        for (int i = 0; i < 12 - phoneNumber.length(); i++) {
             buffer.append("0");
         }
-        buffer.append(sim);
+        buffer.append(phoneNumber);
         return str2Bcd(buffer.toString());
     }
 
     /**
      * 10进制字符串转byte[]
+     * 
+     * @param asc
+     * @return
      */
     public static byte[] str2Bcd(String asc) {
         int len = asc.length();
@@ -65,6 +70,10 @@ public class BcdUtil {
 
     /**
      * byte[]转10进制字符串,并删除前面的0
+     * 
+     * @param bytes
+     *            BCD编码数组
+     * @return
      */
     public static String bcd2Str(byte[] bytes) {
         StringBuffer temp = new StringBuffer(bytes.length * 2);

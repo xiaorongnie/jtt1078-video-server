@@ -1,10 +1,8 @@
-package com.transcodegroup.jtt1078.ffmpeg.codec;
+package com.transcodegroup.jtt1078.common.media;
 
 import java.util.Arrays;
 
 import org.apache.commons.lang3.ArrayUtils;
-
-import com.transcodegroup.jtt1078.common.entity.WaveHeader;
 
 /**
  * WAV音频编解码

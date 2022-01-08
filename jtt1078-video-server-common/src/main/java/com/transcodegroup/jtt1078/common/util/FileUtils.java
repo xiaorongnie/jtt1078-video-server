@@ -3,7 +3,10 @@ package com.transcodegroup.jtt1078.common.util;
 import java.io.*;
 
 /**
- * Created by matrixy on 2019/8/25.
+ * 文件操作单元
+ * 
+ * @author eason
+ * @date 2022/01/08
  */
 public final class FileUtils {
 

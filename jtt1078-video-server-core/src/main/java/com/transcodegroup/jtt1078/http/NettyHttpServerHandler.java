@@ -3,7 +3,7 @@ package com.transcodegroup.jtt1078.http;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.transcodegroup.jtt1078.common.entity.Media;
+import com.transcodegroup.jtt1078.common.media.MediaType;
 import com.transcodegroup.jtt1078.common.util.FileUtils;
 import com.transcodegroup.jtt1078.common.util.Packet;
 import com.transcodegroup.jtt1078.publisher.PublishManager;
@@ -54,7 +54,7 @@ public class NettyHttpServerHandler extends ChannelInboundHandlerAdapter {
             resp.addBytes("\r\n".getBytes(HEADER_ENCODING));
             ctx.writeAndFlush(resp.getBytes()).await();
             // 订阅视频数据
-            long wid = PublishManager.getInstance().subscribe(tag, Media.Type.Video, ctx).getId();
+            long wid = PublishManager.getInstance().subscribe(tag, MediaType.Type.Video, ctx).getId();
             setSession(ctx, new Session().set("subscriber-id", wid).set("tag", tag));
         } else if (uri.equals("/test/multimedia")) {
             responseHTMLFile("/multimedia.html", ctx);

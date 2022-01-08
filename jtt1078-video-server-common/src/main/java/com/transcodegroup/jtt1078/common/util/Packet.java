@@ -3,7 +3,10 @@ package com.transcodegroup.jtt1078.common.util;
 import java.util.Arrays;
 
 /**
- * Created by matrixy on 2018/4/14.
+ * 数据包
+ * 
+ * @author eason
+ * @date 2022/01/08
  */
 public class Packet {
     int size = 0;

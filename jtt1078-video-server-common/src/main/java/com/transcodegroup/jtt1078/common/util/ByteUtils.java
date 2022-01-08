@@ -1,7 +1,10 @@
 package com.transcodegroup.jtt1078.common.util;
 
 /**
- * Created by matrixy on 2017/8/22.
+ * 字节数组常用单元
+ * 
+ * @author eason
+ * @date 2022/01/08
  */
 public final class ByteUtils {
     public static byte[] parse(String hexString) {

@@ -7,9 +7,9 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.apache.commons.lang.StringUtils;
 
 import com.transcodegroup.jtt1078.codec.AudioCodec;
-import com.transcodegroup.jtt1078.common.entity.Media;
-import com.transcodegroup.jtt1078.common.entity.MediaEncoding;
-import com.transcodegroup.jtt1078.common.entity.MediaEncoding.Encoding;
+import com.transcodegroup.jtt1078.common.media.MediaEncoding;
+import com.transcodegroup.jtt1078.common.media.MediaType;
+import com.transcodegroup.jtt1078.common.media.MediaEncoding.Encoding;
 import com.transcodegroup.jtt1078.common.util.ByteHolder;
 import com.transcodegroup.jtt1078.common.util.Configs;
 import com.transcodegroup.jtt1078.entity.Rtp1078Msg;
@@ -84,7 +84,7 @@ public class Channel {
         if (audioCodec == null) {
             audioCodec = AudioCodec.getCodec(payloadType);
             this.payloadType = payloadType;
-            Encoding encoding = MediaEncoding.getEncoding(Media.Type.Audio, payloadType);
+            Encoding encoding = MediaEncoding.getEncoding(MediaType.Type.Audio, payloadType);
             log.info("{} -> audio codec = {}&{}", toString(), encoding, payloadType);
             log.info("{} -> audio data = {}, pcm = {}", toString(), data.length, audioCodec.toPCM(data).length);
         }

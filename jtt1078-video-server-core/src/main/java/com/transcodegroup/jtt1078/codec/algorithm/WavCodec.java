@@ -5,7 +5,7 @@ import java.util.Arrays;
 import org.apache.commons.lang.ArrayUtils;
 
 import com.transcodegroup.jtt1078.codec.AudioCodec;
-import com.transcodegroup.jtt1078.common.entity.WaveHeader;
+import com.transcodegroup.jtt1078.common.media.WaveHeader;
 
 /**
  * WAV音频编解码

@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * Created by matrixy on 2017/8/14.
+ * 自定义报警配置
+ * 
+ * @author eason
+ * @date 2022/01/08
  */
 public final class Configs {
     static Properties properties = new Properties();

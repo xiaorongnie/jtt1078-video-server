@@ -1,7 +1,10 @@
-package com.transcodegroup.jtt1078.common.entity;
+package com.transcodegroup.jtt1078.common.media;
 
 /**
- * Created by matrixy on 2019/12/20.
+ * 音视频编码格式
+ * 
+ * @author eason
+ * @date 2022/01/08
  */
 public final class MediaEncoding {
     public enum Encoding {
@@ -28,8 +31,15 @@ public final class MediaEncoding {
         }
     }
 
-    public static Encoding getEncoding(Media.Type type, int pt) {
-        if (type.equals(Media.Type.Audio)) {
+    /**
+     * 获取类型
+     * 
+     * @param type
+     * @param pt
+     * @return
+     */
+    public static Encoding getEncoding(MediaType.Type type, int pt) {
+        if (type.equals(MediaType.Type.Audio)) {
             if (pt == 111) {
                 return Encoding.MG726;
             }

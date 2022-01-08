@@ -14,8 +14,8 @@ import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
+import com.transcodegroup.jtt1078.common.media.WavCodec;
 import com.transcodegroup.jtt1078.common.util.FileUtils;
-import com.transcodegroup.jtt1078.ffmpeg.codec.WavCodec;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -2,7 +2,7 @@ package com.transcodegroup.jtt1078.publisher;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.transcodegroup.jtt1078.common.entity.Media;
+import com.transcodegroup.jtt1078.common.media.MediaType;
 import com.transcodegroup.jtt1078.subscriber.Subscriber;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -35,7 +35,7 @@ public final class PublishManager {
      * 
      * @return
      */
-    public Subscriber subscribe(String tag, Media.Type type, ChannelHandlerContext ctx) {
+    public Subscriber subscribe(String tag, MediaType.Type type, ChannelHandlerContext ctx) {
         Channel channel = channels.get(tag);
         if (channel == null) {
             channel = new Channel(tag);
@@ -43,7 +43,7 @@ public final class PublishManager {
             log.info("{} => start publishing", channel);
         }
         Subscriber subscriber = null;
-        if (type.equals(Media.Type.Video)) {
+        if (type.equals(MediaType.Type.Video)) {
             subscriber = channel.subscribe(ctx);
         } else {
             throw new RuntimeException("unknown media type: " + type);

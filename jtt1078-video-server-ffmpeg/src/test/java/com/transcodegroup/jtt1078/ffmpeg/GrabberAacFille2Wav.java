@@ -12,8 +12,8 @@ import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.Frame;
 
+import com.transcodegroup.jtt1078.common.media.WavCodec;
 import com.transcodegroup.jtt1078.common.util.FileUtils;
-import com.transcodegroup.jtt1078.ffmpeg.codec.WavCodec;
 
 /**
  * PCM编码aac之后，将数据写入输出流，最后存成aac文件
