@@ -7,11 +7,11 @@ import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.ffmpeg.global.avutil;
 import org.bytedeco.javacv.Frame;
 
-import com.transcodegroup.jtt1078.codec.algorithm.WavCodec;
-import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioFileGrabber;
-import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioStreamGrabber;
-import com.transcodegroup.jtt1078.codec.ffmpeg.javacv.AudioStreamRecorder;
 import com.transcodegroup.jtt1078.common.util.FileUtils;
+import com.transcodegroup.jtt1078.core.codec.WavCodec;
+import com.transcodegroup.jtt1078.ffmpeg.javacv.AudioFileGrabber;
+import com.transcodegroup.jtt1078.ffmpeg.javacv.AudioStreamGrabber;
+import com.transcodegroup.jtt1078.ffmpeg.javacv.AudioStreamRecorder;
 
 public class Mg726Test {
     public static void main(String[] args) throws Exception {

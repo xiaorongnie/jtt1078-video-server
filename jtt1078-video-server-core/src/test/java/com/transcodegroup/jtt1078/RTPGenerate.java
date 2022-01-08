@@ -7,7 +7,7 @@ import java.io.OutputStream;
 import java.util.LinkedList;
 
 import com.transcodegroup.jtt1078.common.util.Packet;
-import com.transcodegroup.jtt1078.server.Jtt1078Decoder;
+import com.transcodegroup.jtt1078.core.server.Jtt1078Decoder;
 
 /**
  * Created by matrixy on 2019/12/16.

@@ -3,7 +3,7 @@ package com.transcodegroup.jtt1078;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-import com.transcodegroup.jtt1078.codec.algorithm.G711Codec;
+import com.transcodegroup.jtt1078.core.codec.G711Codec;
 
 /**
  * Created by matrixy on 2019/12/21.
