@@ -8,6 +8,8 @@ import java.util.Properties;
 /**
  * 自定义报警配置
  * 
+ * {@link SpringBoot}
+ * 
  * @author eason
  * @date 2022/01/08
  */

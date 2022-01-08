@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.flv;
+package com.transcodegroup.jtt1078.common.flv;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.transcodegroup.jtt1078.core.flv.FlvEncoder;
+import com.transcodegroup.jtt1078.common.flv.FlvEncoder;
 
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;

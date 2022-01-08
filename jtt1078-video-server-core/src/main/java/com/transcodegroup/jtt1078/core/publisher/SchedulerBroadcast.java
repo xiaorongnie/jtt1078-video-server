@@ -10,8 +10,8 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
-import com.transcodegroup.jtt1078.core.ws.WsSession;
-import com.transcodegroup.jtt1078.core.ws.WsSessionGroup;
+import com.transcodegroup.jtt1078.core.websocket.WsSession;
+import com.transcodegroup.jtt1078.core.websocket.WsSessionGroup;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.ws;
+package com.transcodegroup.jtt1078.core.websocket;
 
 import java.io.IOException;
 import java.util.List;

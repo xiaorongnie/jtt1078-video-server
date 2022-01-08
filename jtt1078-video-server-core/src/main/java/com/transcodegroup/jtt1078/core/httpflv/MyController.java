@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.http;
+package com.transcodegroup.jtt1078.core.httpflv;
 
 import java.util.Date;
 

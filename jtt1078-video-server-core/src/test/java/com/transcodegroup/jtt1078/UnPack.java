@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
 import com.transcodegroup.jtt1078.common.util.Packet;
-import com.transcodegroup.jtt1078.core.server.Jtt1078Decoder;
+import com.transcodegroup.jtt1078.core.server1078.Jtt1078Decoder;
 
 public class UnPack
 {

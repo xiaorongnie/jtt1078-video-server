@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.flv;
+package com.transcodegroup.jtt1078.common.flv;
 
 //由于flv格式是header+body,而body是preTagSize+currentTagData.......循环形式,并且第一个的preTagSize始终为0,
 // 与其这样不如采用(header+preTag0Size)+（currentTagData+currentTagSize），这样就避免每次都要记录以下上一个tag的数据大小。

@@ -13,12 +13,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import com.transcodegroup.jtt1078.common.util.Configs;
-import com.transcodegroup.jtt1078.core.http.GeneralResponseWriter;
-import com.transcodegroup.jtt1078.core.http.NettyHttpServerHandler;
+import com.transcodegroup.jtt1078.core.httpflv.GeneralResponseWriter;
+import com.transcodegroup.jtt1078.core.httpflv.NettyHttpServerHandler;
 import com.transcodegroup.jtt1078.core.publisher.PublishManager;
-import com.transcodegroup.jtt1078.core.server.Jtt1078Handler;
-import com.transcodegroup.jtt1078.core.server.Jtt1078MessageDecoder;
-import com.transcodegroup.jtt1078.core.server.Jtt808MessageEncoder;
+import com.transcodegroup.jtt1078.core.server1078.Jtt1078Handler;
+import com.transcodegroup.jtt1078.core.server1078.Jtt1078MessageDecoder;
+import com.transcodegroup.jtt1078.core.server1078.Jtt808MessageEncoder;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;

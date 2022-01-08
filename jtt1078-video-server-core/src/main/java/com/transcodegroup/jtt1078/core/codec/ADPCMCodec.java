@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 
 import com.transcodegroup.jtt1078.common.codec.AudioCodec;
 import com.transcodegroup.jtt1078.common.util.Packet;
-import com.transcodegroup.jtt1078.core.server.Jtt1078Decoder;
+import com.transcodegroup.jtt1078.core.server1078.Jtt1078Decoder;
 
 /**
  * Created by houcheng on 2019-12-05. ADPCM 和 PCM转换

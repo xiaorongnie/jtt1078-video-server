@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.ws;
+package com.transcodegroup.jtt1078.core.websocket;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

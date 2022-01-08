@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.server;
+package com.transcodegroup.jtt1078.core.server1078;
 
 import com.transcodegroup.jtt1078.common.entity.Rtp1078Msg;
 import com.transcodegroup.jtt1078.common.util.BcdUtil;

@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.server;
+package com.transcodegroup.jtt1078.core.server1078;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.ws;
+package com.transcodegroup.jtt1078.core.websocket;
 
 import java.util.concurrent.ConcurrentHashMap;
 

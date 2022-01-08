@@ -1,4 +1,4 @@
-package com.transcodegroup.jtt1078.core.http;
+package com.transcodegroup.jtt1078.core.httpflv;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,7 +7,7 @@ import com.transcodegroup.jtt1078.common.media.MediaType;
 import com.transcodegroup.jtt1078.common.util.FileUtils;
 import com.transcodegroup.jtt1078.common.util.Packet;
 import com.transcodegroup.jtt1078.core.publisher.PublishManager;
-import com.transcodegroup.jtt1078.core.server.Session;
+import com.transcodegroup.jtt1078.core.server1078.Session;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

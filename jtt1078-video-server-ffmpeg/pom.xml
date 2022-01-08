@@ -20,12 +20,26 @@
       <groupId>com.transcodegroup</groupId>
       <artifactId>jtt1078-video-server-common</artifactId>
     </dependency>
-    <!-- javacv -->
+    <!-- javacv JavaCV精简依赖包：如何只依赖本地平台所需的最小依赖包 https://www.its304.com/article/eguid_1/117277841 -->
     <!-- https://mvnrepository.com/artifact/org.bytedeco/javacv-platform -->
     <dependency>
       <groupId>org.bytedeco</groupId>
-      <artifactId>javacv-platform</artifactId>
+      <artifactId>javacv</artifactId>
       <version>1.5.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>1.5.5</version>
+      <classifier>windows-x86_64</classifier>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bytedeco</groupId>
+      <artifactId>javacpp</artifactId>
+      <version>1.5.5</version>
+      <classifier>linux-x86_64</classifier>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.bytedeco/ffmpeg-platform -->
