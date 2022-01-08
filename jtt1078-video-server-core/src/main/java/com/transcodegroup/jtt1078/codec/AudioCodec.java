@@ -1,9 +1,13 @@
 package com.transcodegroup.jtt1078.codec;
 
+import org.springframework.util.StringUtils;
+
 import com.transcodegroup.jtt1078.codec.algorithm.ADPCMCodec;
 import com.transcodegroup.jtt1078.codec.algorithm.G711Codec;
 import com.transcodegroup.jtt1078.codec.algorithm.G711UCodec;
+import com.transcodegroup.jtt1078.codec.algorithm.PcmCodec;
 import com.transcodegroup.jtt1078.codec.algorithm.SilenceCodec;
+import com.transcodegroup.jtt1078.codec.algorithm.WavCodec;
 import com.transcodegroup.jtt1078.codec.ffmpeg.G726Codec;
 import com.transcodegroup.jtt1078.codec.ffmpeg.Mg726Codec;
 import com.transcodegroup.jtt1078.codec.ffmpeg.aac.AACCodec;
@@ -38,6 +42,20 @@ public abstract class AudioCodec {
             return new Mg726Codec();
         }
         return new SilenceCodec();
+    }
+
+    public static AudioCodec getCodec(String encoding) {
+        if (StringUtils.isEmpty(encoding)) {
+            return new PcmCodec();
+        }
+        if ("WAV".equalsIgnoreCase(encoding)) {
+            return new WavCodec();
+        } else if ("G711A".equalsIgnoreCase(encoding)) {
+            return new G711Codec();
+        } else if ("G711U".equalsIgnoreCase(encoding)) {
+            return new G711UCodec();
+        }
+        return new PcmCodec();
     }
 
     public void open() {}

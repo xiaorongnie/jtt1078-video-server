@@ -12,10 +12,12 @@ import com.transcodegroup.jtt1078.common.entity.MediaEncoding;
 import com.transcodegroup.jtt1078.common.entity.MediaEncoding.Encoding;
 import com.transcodegroup.jtt1078.common.util.ByteHolder;
 import com.transcodegroup.jtt1078.common.util.Configs;
+import com.transcodegroup.jtt1078.entity.Rtp1078Msg;
 import com.transcodegroup.jtt1078.flv.FlvEncoder;
 import com.transcodegroup.jtt1078.subscriber.RTMPPublisher;
 import com.transcodegroup.jtt1078.subscriber.Subscriber;
 import com.transcodegroup.jtt1078.subscriber.VideoSubscriber;
+import com.transcodegroup.jtt1078.ws.WsSession;
 import com.transcodegroup.jtt1078.ws.WsSessionGroup;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -127,8 +129,9 @@ public class Channel {
             subscriber.onAudioData(timeoffset, flvTag, flvEncoder);
         }
         // 对讲通道请求=0
-        if (this.chn == 0) {
-            WsSessionGroup.onAudioData(imei, flvTag);
+        WsSession wsSession = WsSessionGroup.getSession(imei);
+        if (wsSession != null && this.chn == 0) {
+            wsSession.onAudioDataOfDevicePcm(flvTag);
         }
     }
 
@@ -196,6 +199,29 @@ public class Channel {
      */
     public synchronized int size() {
         return subscribers.size();
+    }
+
+    /**
+     * 获取终端音频编解码
+     * 
+     * @return
+     */
+    public AudioCodec getAudioCodec() {
+        return this.audioCodec;
+    }
+
+    /**
+     * 1078发送一包编码之后的音频数据
+     * 
+     * @param encodeData
+     */
+    public void publishAudio(byte[] encodeData) {
+        Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
+        rtp1078Msg.setSim(imei);
+        rtp1078Msg.setData(encodeData);
+        rtp1078Msg.setFlag2((byte)payloadType);
+        rtp1078Msg.setHig726(audioCodec.hisi);
+        ctx.channel().writeAndFlush(rtp1078Msg);
     }
 
 }

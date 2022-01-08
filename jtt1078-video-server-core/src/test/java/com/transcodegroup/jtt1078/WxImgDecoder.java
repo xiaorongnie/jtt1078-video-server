@@ -18,7 +18,7 @@ public class WxImgDecoder {
         // PATH = "I:\\Honor6\\test";
         // PATH = JOptionPane.showInputDialog(null, "Please input PATH of the dat image files",
         // "Wechat dat img file converter", JOptionPane.INFORMATION_MESSAGE);
-        PATH = "F:\\wechat\\WeChat Files\\i_love_you_1413\\FileStorage\\Image\\2019-02";
+        PATH = "F:\\wechat\\WeChat Files\\i_love_you_1413\\FileStorage\\Image\\2020-01";
 
         if (PATH == null) {
             return;

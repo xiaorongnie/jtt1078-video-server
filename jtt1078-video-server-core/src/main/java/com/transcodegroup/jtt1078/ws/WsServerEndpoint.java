@@ -1,6 +1,8 @@
 package com.transcodegroup.jtt1078.ws;
 
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.websocket.OnClose;
 import javax.websocket.OnError;
@@ -11,9 +13,10 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import com.transcodegroup.jtt1078.codec.AudioCodec;
 import com.transcodegroup.jtt1078.common.util.Utils;
-import com.transcodegroup.jtt1078.publisher.PublishManager;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,20 +35,27 @@ public class WsServerEndpoint {
 
     @OnOpen
     public void onOpen(Session session, @PathParam(value = "imei") String imei) {
-        log.info("WebSocket open (WAV 8k 16bit) -> {}, {}", session.getId(), imei);
-        WsSessionGroup.put(new WsSession(session, Utils.formatPhoneNumber(imei)));
+        Map<String, List<String>> requestParameterMap = session.getRequestParameterMap();
+        List<String> formats = requestParameterMap.get("format");
+        String format = CollectionUtils.isEmpty(formats) ? "pcm" : formats.get(0);
+        log.info("WebSocket open ({} 8k 16bit) -> {}, {}", format, session.getId(), imei);
+        WsSession wsSession = new WsSession(session, Utils.formatPhoneNumber(imei), AudioCodec.getCodec(format));
+        WsSessionGroup.put(wsSession);
+        wsSession.start();
     }
 
     @OnClose
     public void onClose(Session session) {
-        log.info("WebSocket close (WAV 8k 16bit) -> {} {}", session.getId(), session.getUserProperties().get("imei"));
+        log.info("WebSocket close -> {} {}", session.getId(), WsSessionGroup.getImei(session));
         WsSessionGroup.remove(session.getId());
     }
 
     @OnMessage
-    public void onMsg(byte[] data, Session session) {
-        PublishManager.getInstance().publishAudio(Arrays.copyOfRange(data, 44, data.length),
-            WsSessionGroup.getImei(session));
+    public void onMsg(byte[] data, Session session) throws IOException {
+        synchronized (session) {
+            WsSession wsSession = WsSessionGroup.getSession(session);
+            wsSession.onAudioDataOfPlatform(data);
+        }
     }
 
     @OnError

@@ -1,16 +1,8 @@
 package com.transcodegroup.jtt1078.publisher;
 
-import java.time.Instant;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.util.StringUtils;
-
 import com.transcodegroup.jtt1078.common.entity.Media;
-import com.transcodegroup.jtt1078.entity.Rtp1078Msg;
 import com.transcodegroup.jtt1078.subscriber.Subscriber;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -130,6 +122,13 @@ public final class PublishManager {
     }
 
     /**
+     * 查询频道
+     */
+    public Channel getChannel(String tag) {
+        return channels.get(tag);
+    }
+
+    /**
      * RTP关闭频道
      * 
      * @param tag
@@ -147,32 +146,6 @@ public final class PublishManager {
 
     public static PublishManager getInstance() {
         return INSTANCE;
-    }
-
-    /**
-     * 发送音频数据到终端
-     * 
-     * @param pcmData
-     *            PCM数据
-     * @throws InterruptedException
-     */
-    public void publishAudio(byte[] pcmData, String imei) {
-        // 一包包含320个16bit采样点
-        int pcmBlock = 320 * 2;
-        int times = pcmData.length / pcmBlock;
-        for (int i = 0; i < times; i++) {
-            byte[] data = ArrayUtils.subarray(pcmData, 640 * i, 640 * (i + 1));
-            for (Channel channel : channels.values()) {
-                if (StringUtils.hasText(imei) && channel.audioCodec != null && imei.equals(channel.imei)) {
-                    Rtp1078Msg rtp1078Msg = new Rtp1078Msg();
-                    rtp1078Msg.setSim(channel.imei);
-                    rtp1078Msg.setData(channel.audioCodec.fromPCM(data));
-                    rtp1078Msg.setFlag2((byte)channel.payloadType);
-                    rtp1078Msg.setHig726(channel.audioCodec.hisi);
-                    channel.ctx.channel().writeAndFlush(rtp1078Msg);
-                }
-            }
-        }
     }
 
 }

@@ -6,10 +6,11 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.transcodegroup.jtt1078.ws.WsSession;
 import com.transcodegroup.jtt1078.ws.WsSessionGroup;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,9 +23,8 @@ public class SchedulerBroadcast {
     /**
      * 15秒检查一次,无人订阅的频道,主动关闭
      * 
-     * @throws Exception
      */
-    @Scheduled(initialDelay = 15 * 1000, fixedDelay = 15 * 1000)
+    // @Scheduled(initialDelay = 15 * 1000, fixedDelay = 15 * 1000)
     public void checkIdleChannel() throws Exception {
         PublishManager publishManager = PublishManager.getInstance();
         for (Iterator<Channel> itr = publishManager.channels.values().iterator(); itr.hasNext();) {
@@ -39,7 +39,11 @@ public class SchedulerBroadcast {
         }
     }
 
-    @Scheduled(initialDelay = 15 * 1000, fixedDelay = 15 * 1000)
+    /**
+     * 定时发送测试数据到终端
+     * 
+     */
+    // @Scheduled(initialDelay = 5 * 1000, fixedDelay = 10 * 1000)
     public void sendTestData2Device() throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * 1024 * 4);
         byte[] block = new byte[512];
@@ -47,21 +51,22 @@ public class SchedulerBroadcast {
         while (fis.read(block) > -1) {
             baos.write(block);
         }
+        baos.flush();
         byte[] data = baos.toByteArray();
-        PublishManager.getInstance().publishAudio(Arrays.copyOfRange(data, 44, data.length), null);
-        fis.close();
-    }
 
-    @Scheduled(initialDelay = 10 * 1000, fixedDelay = 10 * 1000)
-    public void sendTestData2Platform() throws Exception {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream(1024 * 1024 * 4);
-        byte[] block = new byte[512];
-        FileInputStream fis = new FileInputStream("test.wav");
-        while ((fis.read(block)) > -1) {
-            baos.write(block);
+        WsSession wsSession = WsSessionGroup.getSession("010007012345");
+        if (wsSession != null) {
+            byte[] pcmData = Arrays.copyOfRange(data, 0, data.length);
+            // 一包包含320个16bit采样点
+            int pcmBlock = 320 * 2;
+            int times = pcmData.length / pcmBlock;
+            for (int i = 0; i < times; i++) {
+                byte[] data2 = ArrayUtils.subarray(pcmData, 640 * i, 640 * (i + 1));
+                wsSession.onAudioDataOfPlatform(data2);
+                System.out.println("发送分块数据 640bit");
+                Thread.sleep(40);
+            }
         }
-        byte[] data = baos.toByteArray();
-        WsSessionGroup.broadcastWavDataChunks(data);
         fis.close();
     }
 
