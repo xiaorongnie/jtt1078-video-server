@@ -9,13 +9,23 @@ import com.transcodegroup.jtt1078.ffmpeg.g726.G726Codec;
 import com.transcodegroup.jtt1078.ffmpeg.g726.Mg726Codec;
 
 /**
- * 音频编解码抽象类
+ * 音视频编解码工厂
  * 
  * @author eason
  * @date 2021/05/13
  */
 public class AudioCodecFactory {
 
+    public static final String WAV = "WAV";
+    public static final String G711A = "G711A";
+    public static final String G711U = "G711U";
+
+    /**
+     * 1078音频ID获取编解码器
+     * 
+     * @param encoding
+     * @return
+     */
     public static AudioCodec getCodec(int encoding) {
         if (MediaEncoding.Encoding.ADPCMA.ordinal() == encoding) {
             return new ADPCMCodec();
@@ -33,15 +43,21 @@ public class AudioCodecFactory {
         return new SilenceCodec();
     }
 
+    /**
+     * 前端字符串获取音频编解码器
+     * 
+     * @param encoding
+     * @return
+     */
     public static AudioCodec getCodec(String encoding) {
         if (StringUtils.isEmpty(encoding)) {
             return new PcmCodec();
         }
-        if ("WAV".equalsIgnoreCase(encoding)) {
+        if (WAV.equalsIgnoreCase(encoding)) {
             return new WavCodec();
-        } else if ("G711A".equalsIgnoreCase(encoding)) {
+        } else if (G711A.equalsIgnoreCase(encoding)) {
             return new G711Codec();
-        } else if ("G711U".equalsIgnoreCase(encoding)) {
+        } else if (G711U.equalsIgnoreCase(encoding)) {
             return new G711UCodec();
         }
         return new PcmCodec();

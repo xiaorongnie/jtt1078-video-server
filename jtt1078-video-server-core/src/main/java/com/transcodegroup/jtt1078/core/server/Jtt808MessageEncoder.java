@@ -1,7 +1,7 @@
 package com.transcodegroup.jtt1078.core.server;
 
+import com.transcodegroup.jtt1078.common.entity.Rtp1078Msg;
 import com.transcodegroup.jtt1078.common.util.BcdUtil;
-import com.transcodegroup.jtt1078.core.entity.Rtp1078Msg;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
