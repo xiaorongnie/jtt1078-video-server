@@ -8,6 +8,7 @@ import java.util.Iterator;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.transcodegroup.jtt1078.core.websocket.WsSession;
@@ -37,6 +38,19 @@ public class SchedulerBroadcast {
                 }
             }
         }
+    }
+
+    /**
+     * 15秒输出一次会话数量
+     * 
+     */
+    @Scheduled(initialDelay = 15 * 1000, fixedDelay = 15 * 1000)
+    public void check() throws Exception {
+        PublishManager publishManager = PublishManager.getInstance();
+        log.info("------->");
+        log.info("Channels = {}", publishManager.channels.size());
+        log.info("WsSessions = {}", WsSessionGroup.size());
+        log.info("<-------");
     }
 
     /**

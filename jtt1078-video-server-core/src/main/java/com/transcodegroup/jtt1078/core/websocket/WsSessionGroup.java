@@ -77,4 +77,8 @@ public class WsSessionGroup {
         return wsSession == null ? null : wsSession.getImei();
     }
 
+    public static int size() {
+        return sessionHashMap.size();
+    }
+
 }
